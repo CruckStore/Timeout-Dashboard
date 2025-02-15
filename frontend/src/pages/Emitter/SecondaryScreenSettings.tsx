@@ -1,11 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const SecondaryScreenSettings = () => {
-  const [theme, setTheme] = useState('écran secondaire'); 
-  const [mediaType, setMediaType] = useState<'img' | 'video' | 'texte'>('img');
-  const [mediaContent, setMediaContent] = useState('');
+  const [theme, setTheme] = useState(() => localStorage.getItem('secondaryScreenTheme') || 'écran secondaire');
+  const [mediaType, setMediaType] = useState<'img' | 'video' | 'texte'>(() => {
+    const stored = localStorage.getItem('secondaryScreenMediaType');
+    return stored === 'video' || stored === 'texte' ? stored : 'img';
+  });
+  const [mediaContent, setMediaContent] = useState(() => localStorage.getItem('secondaryScreenMediaContent') || '');
+
+  useEffect(() => {
+    localStorage.setItem('secondaryScreenTheme', theme);
+  }, [theme]);
+
+  useEffect(() => {
+    localStorage.setItem('secondaryScreenMediaType', mediaType);
+  }, [mediaType]);
+
+  useEffect(() => {
+    localStorage.setItem('secondaryScreenMediaContent', mediaContent);
+  }, [mediaContent]);
 
   const handleSave = () => {
+    // Vous pouvez également envoyer ces paramètres à votre backend si nécessaire.
     alert('Modifications enregistrées pour l\'Écran Secondaire');
   };
 

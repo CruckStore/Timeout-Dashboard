@@ -1,12 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const MainScreenSettings = () => {
-  const [theme, setTheme] = useState('écran principal'); // Options : "écran principal", "chrono", "texte", "écran secondaire"
-  const [mediaType, setMediaType] = useState<'img' | 'video' | 'texte'>('img');
-  const [mediaContent, setMediaContent] = useState('');
+  const [theme, setTheme] = useState(() => localStorage.getItem('mainScreenTheme') || 'écran principal');
+  const [mediaType, setMediaType] = useState<'img' | 'video' | 'texte'>(() => {
+    const stored = localStorage.getItem('mainScreenMediaType');
+    return stored === 'video' || stored === 'texte' ? stored : 'img';
+  });
+  const [mediaContent, setMediaContent] = useState(() => localStorage.getItem('mainScreenMediaContent') || '');
+
+  useEffect(() => {
+    localStorage.setItem('mainScreenTheme', theme);
+  }, [theme]);
+
+  useEffect(() => {
+    localStorage.setItem('mainScreenMediaType', mediaType);
+  }, [mediaType]);
+
+  useEffect(() => {
+    localStorage.setItem('mainScreenMediaContent', mediaContent);
+  }, [mediaContent]);
 
   const handleSave = () => {
-    // Enregistrer les paramètres (ex: appel API au backend)
+    // Vous pouvez également envoyer ces paramètres à votre backend si nécessaire.
     alert('Modifications enregistrées pour l\'Écran Principal');
   };
 

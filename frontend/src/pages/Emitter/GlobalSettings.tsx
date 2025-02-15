@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTimer } from '../../context/TimerContext';
 
 const GlobalSettings = () => {
   const { time, updateTime, toggleTimer, isRunning } = useTimer();
   const [inputTime, setInputTime] = useState<number>(0);
-  const [mode, setMode] = useState<'timer' | 'chrono'>('timer');
+  const [mode, setMode] = useState<'timer' | 'chrono'>(() => {
+    const stored = localStorage.getItem('globalMode');
+    return stored === 'chrono' ? 'chrono' : 'timer';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('globalMode', mode);
+  }, [mode]);
 
   return (
     <div className="card global-settings">
