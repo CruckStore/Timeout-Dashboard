@@ -10,10 +10,14 @@ import EmitterSettings from '../pages/Emitter/EmitterSettings';
 import NotFound from '../pages/NotFound';
 import { useAuth } from '../context/AuthContext';
 
-const PrivateRoute = ({ children }: { children: JSX.Element }) => {
-  const { isAuthenticated } = useAuth();
-  return isAuthenticated ? children : <Navigate to="/login" />;
-};
+interface PrivateRouteProps {
+    children: React.ReactNode;
+  }
+
+const PrivateRoute = ({ children }: PrivateRouteProps) => {
+    const { isAuthenticated } = useAuth();
+    return isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
+  };
 
 function AppRoutes() {
   return (
