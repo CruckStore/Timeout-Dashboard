@@ -58,6 +58,16 @@ input {
     flex-shrink: 0;
 }
 
+.secondary-screen .logo-container .logo {
+    width: 400.00px;
+    aspect-ratio: 1068.66/200.00;
+    flex-shrink: 0;
+}
+
+.secondary-screen .timer {
+    font-size: 100px;
+}
+
 .settings-cards {
   display: flex;
   flex-wrap: wrap;
