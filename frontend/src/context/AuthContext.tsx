@@ -13,7 +13,9 @@ const AuthContext = createContext<AuthContextProps>({
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isAuthenticated, setAuthenticated] = useState(false);
+  const [isAuthenticated, setAuthenticated] = useState<boolean>(() => {
+    return localStorage.getItem('isAuthenticated') === 'true';
+  });
 
   const login = async (username: string, password: string) => {
     try {
@@ -24,6 +26,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
       if (response.ok) {
         setAuthenticated(true);
+        localStorage.setItem('isAuthenticated', 'true');
         return true;
       } else {
         return false;
@@ -36,6 +39,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const logout = () => {
     setAuthenticated(false);
+    localStorage.removeItem('isAuthenticated');
   };
 
   return (
