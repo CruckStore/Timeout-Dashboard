@@ -21,7 +21,6 @@ const MainScreenSettings = () => {
   }, [mediaContent]);
 
   const handleSave = () => {
-    // Vous pouvez également envoyer ces paramètres à votre backend si nécessaire.
     alert('Modifications enregistrées pour l\'Écran Principal');
   };
 

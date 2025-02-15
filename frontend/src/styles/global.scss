@@ -6,6 +6,7 @@ body {
   background-color: #0e0d0d;
   color: #fff;
   font-family: sans-serif;
+  user-select: none;
 }
 
 .ds-digital {
@@ -34,6 +35,29 @@ input {
   background-color: #1a1a1a;
 }
 
+.timer {
+    text-align: center;
+    font-family: "DS-Digital", sans-serif;
+    font-size: 250px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.main-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.main-screen .logo {
+    width: 950.00px;
+    aspect-ratio: 1068.66/200.00;
+    flex-shrink: 0;
+}
+
 .settings-cards {
   display: flex;
   flex-wrap: wrap;
@@ -60,6 +84,5 @@ input {
 }
 
 .logo {
-  max-width: 200px;
   margin: 20px;
 }
