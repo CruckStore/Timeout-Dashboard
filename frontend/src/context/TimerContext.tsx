@@ -44,6 +44,23 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
     socket?.emit('toggleTimer', { isRunning: !isRunning });
   };
 
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+    if (isRunning) {
+      intervalId = setInterval(() => {
+        const currentMode = localStorage.getItem('globalMode') || 'timer';
+        setTime(prevTime => {
+          const newTime = currentMode === 'chrono' ? prevTime + 1 : prevTime - 1;
+          socket?.emit('updateTimer', { time: newTime, isRunning });
+          return newTime;
+        });
+      }, 1000);
+    }
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [isRunning, socket]);
+
   return (
     <TimerContext.Provider value={{ time, isRunning, updateTime, toggleTimer }}>
       {children}
