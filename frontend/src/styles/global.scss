@@ -1,15 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=DS+Digital&display=swap');
+@import url("https://fonts.cdnfonts.com/css/ds-digital");
 
 body {
   margin: 0;
   padding: 0;
-  background-color: #0E0D0D;
+  background-color: #0e0d0d;
   color: #fff;
   font-family: sans-serif;
 }
 
 .ds-digital {
-  font-family: 'DS Digital', monospace;
+  font-family: "DS-Digital", sans-serif;
 }
 
 button {
@@ -40,12 +40,17 @@ input {
   justify-content: space-around;
 }
 
-.dashboard-container, .login-container, .receiver-home, .emitter-settings, .notfound-container {
+.dashboard-container,
+.login-container,
+.receiver-home,
+.emitter-settings,
+.notfound-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100vh;
+  font-family: "DS Digital", initial;
 }
 
 .button-group {
