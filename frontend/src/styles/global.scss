@@ -7,6 +7,7 @@ body {
   color: #fff;
   font-family: sans-serif;
   user-select: none;
+  font-family: "DS-Digital", sans-serif;
 }
 
 .ds-digital {
@@ -91,10 +92,27 @@ input {
   font-family: "DS Digital", initial;
 }
 
+.login-container h1 {
+  font-size: 50px;
+  margin-bottom: 50px;
+}
+
 .button-group {
   display: flex;
-  flex-direction: column;
+  flex-direction: grid;
   align-items: center;
+  gap: 50px;
+}
+
+.dashboard-container h1 {
+  font-size: 65px;
+  margin-bottom: 50px;
+}
+
+button {
+    width: 300px;
+    height: 105px;
+    cursor: pointer;
 }
 
 .logo {
