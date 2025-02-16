@@ -93,8 +93,8 @@ input {
 }
 
 .login-container h1 {
-  font-size: 50px;
-  margin-bottom: 50px;
+    font-size: 65px;
+    margin-bottom: 50px;
 }
 
 .button-group {
@@ -109,9 +109,20 @@ input {
   margin-bottom: 50px;
 }
 
+h1 {
+  font-size: 65px;
+  margin-bottom: 50px;
+}
+
 button {
     width: 300px;
     height: 105px;
+    cursor: pointer;
+}
+
+input {
+    width: 300px;
+    height: 82.56px;
     cursor: pointer;
 }
 

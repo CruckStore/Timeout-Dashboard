@@ -6,7 +6,7 @@ const ReceiverHome = () => {
 
   return (
     <div className="receiver-home">
-      <h1>Récepteur</h1>
+      <h1>Recepteur</h1>
       <div className="button-group">
         <button onClick={() => navigate('/receiver/main')}>Écran Principal</button>
         <button onClick={() => navigate('/receiver/secondary')}>Écran Secondaire</button>

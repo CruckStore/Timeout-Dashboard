@@ -8,8 +8,8 @@ const Dashboard = () => {
     <div className="dashboard-container">
       <h1>Dashboard Timeout</h1>
       <div className="button-group">
-        <button onClick={() => navigate('/emitter')}>Émetteur</button>
-        <button onClick={() => navigate('/receiver')}>Récepteur</button>
+        <button onClick={() => navigate('/emitter')}>Emetteur</button>
+        <button onClick={() => navigate('/receiver')}>Recepteur</button>
       </div>
     </div>
   );
