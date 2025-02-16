@@ -22,19 +22,19 @@ const SecondaryScreenSettings = () => {
 
   const handleSave = () => {
     // Vous pouvez également envoyer ces paramètres à votre backend si nécessaire.
-    alert('Modifications enregistrées pour l\'Écran Secondaire');
+    alert('Modifications enregistrées pour l\'Ecran Secondaire');
   };
 
   return (
     <div className="card secondary-screen-settings">
-      <h2>Écran Secondaire</h2>
+      <h2>Ecran Secondaire</h2>
       <div className="theme-selection">
         <p>Sélectionnez le thème:</p>
         <select value={theme} onChange={(e) => setTheme(e.target.value)}>
-          <option value="écran principal">Écran Principal</option>
+          <option value="écran principal">Ecran Principal</option>
           <option value="chrono">Chrono</option>
           <option value="texte">Texte</option>
-          <option value="écran secondaire">Écran Secondaire</option>
+          <option value="écran secondaire">Ecran Secondaire</option>
         </select>
       </div>
       <div className="media-settings">

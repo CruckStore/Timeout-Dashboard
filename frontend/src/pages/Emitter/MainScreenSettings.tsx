@@ -21,19 +21,19 @@ const MainScreenSettings = () => {
   }, [mediaContent]);
 
   const handleSave = () => {
-    alert('Modifications enregistrées pour l\'Écran Principal');
+    alert('Modifications enregistrées pour l\'Ecran Principal');
   };
 
   return (
     <div className="card main-screen-settings">
-      <h2>Écran Principal</h2>
+      <h2>Ecran Principal</h2>
       <div className="theme-selection">
         <p>Sélectionnez le thème:</p>
         <select value={theme} onChange={(e) => setTheme(e.target.value)}>
-          <option value="écran principal">Écran Principal</option>
+          <option value="écran principal">Ecran Principal</option>
           <option value="chrono">Chrono</option>
           <option value="texte">Texte</option>
-          <option value="écran secondaire">Écran Secondaire</option>
+          <option value="écran secondaire">Ecran Secondaire</option>
         </select>
       </div>
       <div className="media-settings">
