@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useTimer } from '../../context/TimerContext';
 
 const GlobalSettings = () => {
-  const { time, start, pause, reset, isRunning } = useTimer();
+  const { time, start, pause, reset, updateTime, isRunning } = useTimer();
   const [inputTime, setInputTime] = useState<number>(0);
   const [mode, setMode] = useState<'timer' | 'chrono'>(() => {
     const stored = localStorage.getItem('globalMode');
     return stored === 'chrono' ? 'chrono' : 'timer';
   });
 
-  // Mémorise le mode dans le localStorage
   useEffect(() => {
     localStorage.setItem('globalMode', mode);
   }, [mode]);
@@ -32,7 +31,7 @@ const GlobalSettings = () => {
             value={inputTime}
             onChange={(e) => setInputTime(Number(e.target.value))}
           />
-          <button onClick={() => reset(inputTime)}>Set</button>
+          <button onClick={() => updateTime(inputTime)}>Set</button>
         </div>
         <div>
           <label>Add:</label>
@@ -41,7 +40,7 @@ const GlobalSettings = () => {
             value={inputTime}
             onChange={(e) => setInputTime(Number(e.target.value))}
           />
-          <button onClick={() => reset(time + inputTime)}>Add</button>
+          <button onClick={() => updateTime(time + inputTime)}>Add</button>
         </div>
         <div>
           <label>Remove:</label>
@@ -50,7 +49,7 @@ const GlobalSettings = () => {
             value={inputTime}
             onChange={(e) => setInputTime(Number(e.target.value))}
           />
-          <button onClick={() => reset(time - inputTime)}>Remove</button>
+          <button onClick={() => updateTime(time - inputTime)}>Remove</button>
         </div>
         <div>
           <p>Temps actuel : {time} s</p>

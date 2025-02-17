@@ -1,4 +1,3 @@
-// src/context/TimerContext.tsx
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 
@@ -7,7 +6,8 @@ interface TimerContextProps {
   isRunning: boolean;
   start: () => void;      
   pause: () => void;      
-  reset: (newTime?: number) => void; 
+  reset: (newTime?: number) => void;
+  updateTime: (newTime: number) => void;
 }
 
 const TimerContext = createContext<TimerContextProps>({
@@ -15,7 +15,8 @@ const TimerContext = createContext<TimerContextProps>({
   isRunning: false,
   start: () => {},
   pause: () => {},
-  reset: () => {}
+  reset: () => {},
+  updateTime: () => {}
 });
 
 export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
@@ -39,7 +40,6 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const tick = () => {
-    // Exemple : on incrémente le temps chaque seconde
     setTime(prev => {
       const newTime = prev + 1;
       socketRef.current?.emit('updateTimer', { time: newTime, isRunning: true });
@@ -69,6 +69,11 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
     socketRef.current?.emit('updateTimer', { time: newTime, isRunning: false });
   };
 
+  const updateTime = (newTime: number) => {
+    setTime(newTime);
+    socketRef.current?.emit('updateTimer', { time: newTime, isRunning });
+  };
+
   useEffect(() => {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
@@ -76,7 +81,7 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <TimerContext.Provider value={{ time, isRunning, start, pause, reset }}>
+    <TimerContext.Provider value={{ time, isRunning, start, pause, reset, updateTime }}>
       {children}
     </TimerContext.Provider>
   );

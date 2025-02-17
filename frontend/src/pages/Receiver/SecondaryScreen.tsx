@@ -5,8 +5,12 @@ import logo from '../../assets/logo.png';
 const SecondaryScreen = () => {
   return (
     <div className="secondary-screen">
-      <TimerDisplay />
-      <img src={logo} alt="Logo" className="logo" />
+      <div className="timer" style={{ textAlign: 'center', marginTop: '20px' }}>
+        <TimerDisplay />
+      </div>
+      <div className="logo-container" style={{ position: 'absolute', bottom: '20px', width: '100%', textAlign: 'center' }}>
+        <img src={logo} alt="Logo" className="logo" />
+      </div>
     </div>
   );
 };
