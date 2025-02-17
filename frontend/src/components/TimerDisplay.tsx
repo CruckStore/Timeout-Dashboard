@@ -4,6 +4,7 @@ import { formatTime } from '../utils/timeUtils';
 
 const TimerDisplay = () => {
   const { time } = useTimer();
+  console.log('TimerDisplay time:', time);
   return <div className="ds-digital">{formatTime(time)}</div>;
 };
 
