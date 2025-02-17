@@ -1,13 +1,92 @@
-import React from 'react';
+import React, { useState } from 'react';
 import TimerDisplay from '../../components/TimerDisplay';
 import logo from '../../assets/logo.png';
 
 const MainScreen = () => {
+  const [theme] = useState(localStorage.getItem('mainScreenTheme') || 'écran principal');
+  const [mediaType] = useState<'img' | 'video' | 'texte'>(
+    (localStorage.getItem('mainScreenMediaType') as 'img' | 'video' | 'texte') || 'img'
+  );
+  const [mediaContent] = useState(localStorage.getItem('mainScreenMediaContent') || '');
+
+  const getYoutubeEmbedUrl = (url: string): string | null => {
+    const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/;
+    const match = url.match(regex);
+    return match
+      ? `https://www.youtube.com/embed/${match[1]}?autoplay=1&mute=1&controls=0&loop=1&playlist=${match[1]}`
+      : null;
+  };
+
   return (
-    <div className="main-screen">
-      <img src={logo} alt="Logo" className="logo" />
-      <div className="timer">
-        <TimerDisplay />
+    <div className="main-screen" style={{ position: 'relative', overflow: 'hidden' }}>
+      {mediaType === 'img' && mediaContent && (
+        <img
+          src={mediaContent}
+          alt="Background"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            zIndex: -1,
+          }}
+        />
+      )}
+      {mediaType === 'video' && mediaContent && (
+        (() => {
+          const embedUrl = getYoutubeEmbedUrl(mediaContent);
+          if (embedUrl) {
+            return (
+              <iframe
+                src={embedUrl}
+                title="Background Video"
+                frameBorder="0"
+                allow="autoplay; muted; loop"
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  zIndex: -1,
+                }}
+              ></iframe>
+            );
+          } else {
+            return (
+              <video
+                src={mediaContent}
+                autoPlay
+                loop
+                muted
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  zIndex: -1,
+                }}
+              ></video>
+            );
+          }
+        })()
+      )}
+      <img
+        src={logo}
+        alt="Logo"
+        className="logo"
+        style={{ position: 'relative', zIndex: 1 }}
+      />
+      <div className="timer" style={{ position: 'relative', zIndex: 1 }}>
+        {mediaType === 'texte' ? (
+          <h1>{mediaContent || 'Votre texte ici'}</h1>
+        ) : (
+          <TimerDisplay />
+        )}
       </div>
     </div>
   );

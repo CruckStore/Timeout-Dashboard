@@ -21,19 +21,26 @@ const MainScreenSettings = () => {
   }, [mediaContent]);
 
   const handleSave = () => {
-    alert('Modifications enregistrées pour l\'Ecran Principal');
+    alert("Modifications enregistrées pour l'Écran Principal");
+  };
+
+  const handleResetMedia = () => {
+    setMediaType('img');
+    setMediaContent('');
+    localStorage.removeItem('mainScreenMediaType');
+    localStorage.removeItem('mainScreenMediaContent');
   };
 
   return (
     <div className="card main-screen-settings">
-      <h2>Ecran Principal</h2>
+      <h2>Écran Principal</h2>
       <div className="theme-selection">
         <p>Sélectionnez le thème:</p>
         <select value={theme} onChange={(e) => setTheme(e.target.value)}>
-          <option value="écran principal">Ecran Principal</option>
+          <option value="écran principal">Écran Principal</option>
           <option value="chrono">Chrono</option>
           <option value="texte">Texte</option>
-          <option value="écran secondaire">Ecran Secondaire</option>
+          <option value="écran secondaire">Écran Secondaire</option>
         </select>
       </div>
       <div className="media-settings">
@@ -42,6 +49,7 @@ const MainScreenSettings = () => {
           <button onClick={() => setMediaType('img')}>Set Img</button>
           <button onClick={() => setMediaType('video')}>Set Video</button>
           <button onClick={() => setMediaType('texte')}>Set Texte</button>
+          <button onClick={handleResetMedia}>Reset Media</button>
         </div>
         <input
           type="text"
