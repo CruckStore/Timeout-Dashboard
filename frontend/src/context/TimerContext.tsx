@@ -1,92 +1,98 @@
-import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
+import React, { createContext, useContext, useState, useRef, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
 
 interface TimerContextProps {
   time: number;
   isRunning: boolean;
-  updateTime: (newTime: number) => void;
-  toggleTimer: () => void;
+  start: () => void;
+  stop: () => void;
+  reset: (newTime?: number) => void;
 }
 
 const TimerContext = createContext<TimerContextProps>({
   time: 0,
   isRunning: false,
-  updateTime: () => {},
-  toggleTimer: () => {}
+  start: () => {},
+  stop: () => {},
+  reset: () => {},
 });
 
 export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
   const [time, setTime] = useState<number>(0);
-  const [isRunning, setRunning] = useState<boolean>(false);
-  const [socket, setSocket] = useState<Socket | null>(null);
-  const lastUpdateRef = useRef<number>(Date.now());
+  const [isRunning, setIsRunning] = useState<boolean>(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const socketRef = useRef<Socket | null>(null);
+
+  const startTimestampRef = useRef<number>(0);
+  const endTimestampRef = useRef<number>(0);
 
   useEffect(() => {
-    const newSocket = io('http://localhost:5000');
-    setSocket(newSocket);
-
-    newSocket.on('timerUpdate', (data: { time: number; isRunning: boolean }) => {
+    const socket = io('http://localhost:5000');
+    socketRef.current = socket;
+    socket.on('timerUpdate', (data: { time: number; isRunning: boolean }) => {
       setTime(data.time);
-      setRunning(data.isRunning);
+      setIsRunning(data.isRunning);
     });
-
     return () => {
-      newSocket.disconnect();
+      socket.disconnect();
     };
   }, []);
 
-  const updateTime = (newTime: number) => {
-    setTime(newTime);
-    socket?.emit('updateTimer', { time: newTime, isRunning });
+  const tick = () => {
+    const mode = localStorage.getItem('globalMode') || 'timer';
+    if (mode === 'chrono') {
+      const newTime = Math.floor((Date.now() - startTimestampRef.current) / 1000);
+      setTime(newTime);
+      socketRef.current?.emit('updateTimer', { time: newTime, isRunning: true });
+    } else {
+      const newTime = Math.max(0, Math.floor((endTimestampRef.current - Date.now()) / 1000));
+      setTime(newTime);
+      socketRef.current?.emit('updateTimer', { time: newTime, isRunning: true });
+      if (newTime === 0) {
+        stop();
+      }
+    }
   };
 
-  const toggleTimer = () => {
-    setRunning(prev => {
-      const newRunning = !prev;
-      if (newRunning) {
-        setTime(0);
-        lastUpdateRef.current = Date.now();
-      }
-      socket?.emit('toggleTimer', { isRunning: newRunning });
-      return newRunning;
-    });
+  const start = () => {
+    const mode = localStorage.getItem('globalMode') || 'timer';
+    if (isRunning) return;
+
+    if (mode === 'chrono') {
+      startTimestampRef.current = Date.now() - time * 1000;
+      setTime(0);
+    } else {
+      if (time <= 0) return;
+      endTimestampRef.current = Date.now() + time * 1000;
+    }
+    setIsRunning(true);
+    socketRef.current?.emit('toggleTimer', { isRunning: true });
+    intervalRef.current = setInterval(tick, 1000);
+  };
+
+  const stop = () => {
+    setIsRunning(false);
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    socketRef.current?.emit('toggleTimer', { isRunning: false });
+  };
+
+  const reset = (newTime: number = 0) => {
+    stop();
+    setTime(newTime);
+    socketRef.current?.emit('updateTimer', { time: newTime, isRunning: false });
   };
 
   useEffect(() => {
-    let intervalId: NodeJS.Timeout | null = null;
-    if (isRunning) {
-      intervalId = setInterval(() => {
-        const now = Date.now();
-        const delta = now - lastUpdateRef.current;
-        if (delta >= 1000) {
-          const secondsPassed = Math.floor(delta / 1000);
-          const globalMode = localStorage.getItem('globalMode') || 'timer';
-          setTime(prevTime => {
-            let newTime: number;
-            if (globalMode === 'chrono') {
-              newTime = prevTime + secondsPassed;
-            } else {
-              newTime = prevTime - secondsPassed;
-              if (newTime <= 0) {
-                newTime = 0;
-                setRunning(false);
-                socket?.emit('toggleTimer', { isRunning: false });
-              }
-            }
-            socket?.emit('updateTimer', { time: newTime, isRunning });
-            lastUpdateRef.current = now;
-            return newTime;
-          });
-        }
-      }, 1000);
-    }
     return () => {
-      if (intervalId) clearInterval(intervalId);
+      if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [isRunning, socket]);
+  }, []);
 
   return (
-    <TimerContext.Provider value={{ time, isRunning, updateTime, toggleTimer }}>
+    <TimerContext.Provider value={{ time, isRunning, start, stop, reset }}>
       {children}
     </TimerContext.Provider>
   );
