@@ -1,6 +1,6 @@
-import React from 'react';
-import { useChronometer } from '../context/ChronometerContext';
-import { formatTime } from '../utils/timeUtils';
+import React from "react";
+import { useChronometer } from "../context/ChronometerContext";
+import { formatTime } from "../utils/timeUtils";
 
 const ChronometerDisplay = () => {
   const { time } = useChronometer();

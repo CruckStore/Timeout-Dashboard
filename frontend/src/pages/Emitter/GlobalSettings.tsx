@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
-import { useTimer } from '../../context/TimerContext';
+import React, { useState } from "react";
+import { useTimer } from "../../context/TimerContext";
 
 const GlobalSettings = () => {
-  const { time, start, pause, reset, updateTime, isRunning, mode, setMode } = useTimer();
+  const { time, start, pause, reset, updateTime, isRunning, mode, setMode } =
+    useTimer();
   const [inputTime, setInputTime] = useState<number>(0);
 
   return (
     <div className="card global-settings">
       <h2>Global</h2>
       <div className="chrono-settings">
-        <p>{mode === 'chrono' ? 'Chronomètre' : 'Compte à rebours'}</p>
+        <p>{mode === "chrono" ? "Chronomètre" : "Compte à rebours"}</p>
         <div>
           <button onClick={isRunning ? pause : start}>
-            {isRunning ? 'Pause' : 'Play'}
+            {isRunning ? "Pause" : "Play"}
           </button>
           <button onClick={() => reset(0)}>Reset</button>
         </div>
@@ -53,8 +54,8 @@ const GlobalSettings = () => {
           <input
             type="radio"
             value="timer"
-            checked={mode === 'timer'}
-            onChange={() => setMode('timer')}
+            checked={mode === "timer"}
+            onChange={() => setMode("timer")}
           />
           Timer (Compte à rebours)
         </label>
@@ -62,8 +63,8 @@ const GlobalSettings = () => {
           <input
             type="radio"
             value="chrono"
-            checked={mode === 'chrono'}
-            onChange={() => setMode('chrono')}
+            checked={mode === "chrono"}
+            onChange={() => setMode("chrono")}
           />
           Chrono (Chronomètre)
         </label>
