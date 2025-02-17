@@ -43,6 +43,10 @@ io.on('connection', (socket) => {
     io.emit('timerUpdate', timerState);
   });
 
+  socket.on("mainScreenUpdate", (data) => {
+    io.emit("mainScreenUpdate", data);
+  });
+
   socket.on('disconnect', () => {
     console.log('Déconnexion:', socket.id);
   });

@@ -1,13 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { io, Socket } from 'socket.io-client';
 import TimerDisplay from '../../components/TimerDisplay';
 import logo from '../../assets/logo.png';
 
 const MainScreen = () => {
-  const [theme] = useState(localStorage.getItem('mainScreenTheme') || 'écran principal');
-  const [mediaType] = useState<'img' | 'video' | 'texte'>(
+  const [theme, setTheme] = useState(localStorage.getItem('mainScreenTheme') || 'écran principal');
+  const [mediaType, setMediaType] = useState<'img' | 'video' | 'texte'>(
     (localStorage.getItem('mainScreenMediaType') as 'img' | 'video' | 'texte') || 'img'
   );
-  const [mediaContent] = useState(localStorage.getItem('mainScreenMediaContent') || '');
+  const [mediaContentImg, setMediaContentImg] = useState(localStorage.getItem('mainScreenMediaContentImg') || '');
+  const [mediaContentVideo, setMediaContentVideo] = useState(localStorage.getItem('mainScreenMediaContentVideo') || '');
+  const [mediaContentTexte, setMediaContentTexte] = useState(localStorage.getItem('mainScreenMediaContentTexte') || '');
+
+  const mediaContent = mediaType === 'img'
+    ? mediaContentImg
+    : mediaType === 'video'
+      ? mediaContentVideo
+      : mediaContentTexte;
+
+  const socketRef = useRef<Socket | null>(null);
+  useEffect(() => {
+    socketRef.current = io("http://localhost:5000");
+    socketRef.current.on("mainScreenUpdate", (data) => {
+      setTheme(data.theme);
+      setMediaType(data.mediaType);
+      if (data.mediaType === "img") setMediaContentImg(data.mediaContent);
+      else if (data.mediaType === "video") setMediaContentVideo(data.mediaContent);
+      else if (data.mediaType === "texte") setMediaContentTexte(data.mediaContent);
+    });
+    return () => {
+      socketRef.current?.disconnect();
+    };
+  }, []);
 
   const getYoutubeEmbedUrl = (url: string): string | null => {
     const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/;
@@ -82,8 +106,8 @@ const MainScreen = () => {
         style={{ position: 'relative', zIndex: 1 }}
       />
       <div className="timer" style={{ position: 'relative', zIndex: 1 }}>
-        {mediaType === 'texte' ? (
-          <h1>{mediaContent || 'Votre texte ici'}</h1>
+        {(mediaType === 'texte' && mediaContent) ? (
+          <h1>{mediaContent}</h1>
         ) : (
           <TimerDisplay />
         )}
