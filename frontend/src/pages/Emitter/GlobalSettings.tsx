@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTimer } from '../../context/TimerContext';
 
 const GlobalSettings = () => {
-  const { time, start, stop, reset, isRunning } = useTimer();
+  const { time, start, pause, reset, isRunning } = useTimer();
   const [inputTime, setInputTime] = useState<number>(0);
   const [mode, setMode] = useState<'timer' | 'chrono'>(() => {
     const stored = localStorage.getItem('globalMode');
@@ -18,9 +18,12 @@ const GlobalSettings = () => {
       <h2>Global</h2>
       <div className="chrono-settings">
         <p>{mode === 'chrono' ? 'Chronomètre' : 'Compte à rebours'}</p>
-        <button onClick={() => { isRunning ? stop() : start(); }}>
-          {isRunning ? 'Stop' : 'Play'}
-        </button>
+        <div>
+          <button onClick={isRunning ? pause : start}>
+            {isRunning ? 'Pause' : 'Play'}
+          </button>
+          <button onClick={() => reset(0)}>Reset</button>
+        </div>
         <div>
           <label>Set:</label>
           <input
