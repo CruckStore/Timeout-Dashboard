@@ -21,7 +21,6 @@ const SecondaryScreenSettings = () => {
   }, [mediaContent]);
 
   const handleSave = () => {
-    // Vous pouvez également envoyer ces paramètres à votre backend si nécessaire.
     alert('Modifications enregistrées pour l\'Ecran Secondaire');
   };
 
