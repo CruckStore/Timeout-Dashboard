@@ -1,14 +1,16 @@
+// src/context/DualTimerContext.tsx
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 
 interface DualTimerContextProps {
-  // Chronomètre (compteur qui monte)
+  // Chrono (monte)
   timeChrono: number;
   isRunningChrono: boolean;
   startChrono: () => void;
   pauseChrono: () => void;
   resetChrono: (newTime?: number) => void;
-  // Timer (compteur qui descend)
+
+  // Timer (descend)
   timeTimer: number;
   isRunningTimer: boolean;
   startTimer: () => void;
@@ -30,19 +32,18 @@ const DualTimerContext = createContext<DualTimerContextProps>({
 });
 
 export const DualTimerProvider = ({ children }: { children: React.ReactNode }) => {
-  // Chronomètre : compteur qui monte
-  const [timeChrono, setTimeChrono] = useState<number>(0);
-  const [isRunningChrono, setIsRunningChrono] = useState<boolean>(false);
+  // État du Chrono
+  const [timeChrono, setTimeChrono] = useState(0);
+  const [isRunningChrono, setIsRunningChrono] = useState(false);
   const chronoIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Timer : compteur qui descend
-  const [timeTimer, setTimeTimer] = useState<number>(0);
-  const [isRunningTimer, setIsRunningTimer] = useState<boolean>(false);
+  // État du Timer
+  const [timeTimer, setTimeTimer] = useState(0);
+  const [isRunningTimer, setIsRunningTimer] = useState(false);
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Socket unique pour la synchronisation (émetteur/récepteurs)
+  // Socket.IO (optionnel, pour synchro multi-clients)
   const socketRef = useRef<Socket | null>(null);
-
   useEffect(() => {
     const socket = io('http://localhost:5000');
     socketRef.current = socket;
@@ -57,7 +58,6 @@ export const DualTimerProvider = ({ children }: { children: React.ReactNode }) =
     };
   }, []);
 
-  // Fonction d'émission : on envoie l'état complet afin de synchroniser tous les clients
   const emitUpdate = (partialData: any) => {
     const data = {
       timeChrono,
@@ -69,19 +69,25 @@ export const DualTimerProvider = ({ children }: { children: React.ReactNode }) =
     socketRef.current?.emit('dualTimerUpdate', data);
   };
 
-  // ================= Chronomètre (compteur qui monte) =================
-  const startChrono = () => {
-    if (isRunningChrono) return;
-    setIsRunningChrono(true);
-    chronoIntervalRef.current = setInterval(() => {
-      setTimeChrono(prev => {
-        const newTime = prev + 1;
-        emitUpdate({ timeChrono: newTime, isRunningChrono: true });
-        return newTime;
-      });
-    }, 1000);
-    emitUpdate({ isRunningChrono: true });
-  };
+  // --------------- Chrono ---------------
+const startChrono = () => {
+  console.log('startChrono called');
+  if (isRunningChrono) return;
+  setIsRunningChrono(true);
+
+  chronoIntervalRef.current = setInterval(() => {
+    console.log('Interval ticking...'); // <-- Ajoutez ce log
+    setTimeChrono(prev => {
+      const newTime = prev + 1;
+      console.log('timeChrono passe à', newTime);
+      emitUpdate({ timeChrono: newTime, isRunningChrono: true });
+      return newTime;
+    });
+  }, 1000);
+
+  emitUpdate({ isRunningChrono: true });
+};
+
 
   const pauseChrono = () => {
     setIsRunningChrono(false);
@@ -98,10 +104,14 @@ export const DualTimerProvider = ({ children }: { children: React.ReactNode }) =
     emitUpdate({ timeChrono: newTime });
   };
 
-  // ================= Timer (compteur qui descend) =================
+  // --------------- Timer ---------------
   const startTimer = () => {
+    console.log('startTimer called');
     if (isRunningTimer) return;
-    if (timeTimer <= 0) return; // ne démarre pas si le temps est nul
+    if (timeTimer <= 0) {
+      console.warn('Set Timer with a value > 0 before starting.');
+      return;
+    }
     setIsRunningTimer(true);
     timerIntervalRef.current = setInterval(() => {
       setTimeTimer(prev => {
@@ -133,6 +143,7 @@ export const DualTimerProvider = ({ children }: { children: React.ReactNode }) =
     emitUpdate({ timeTimer: newTime });
   };
 
+  // Nettoyage
   useEffect(() => {
     return () => {
       if (chronoIntervalRef.current) clearInterval(chronoIntervalRef.current);
