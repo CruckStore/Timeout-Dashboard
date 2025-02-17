@@ -1,14 +1,16 @@
+// src/context/TimerContext.tsx
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 
 export type TimerMode = 'chrono' | 'timer';
 
 interface TimerContextProps {
-  time: number;           
+  // "time" renvoie le temps du mode actif
+  time: number;
   isRunning: boolean;
   mode: TimerMode;
-  start: () => void;      
-  pause: () => void;      
+  start: () => void;
+  pause: () => void;
   reset: (newTime?: number) => void;
   updateTime: (newTime: number) => void;
   setMode: (newMode: TimerMode) => void;
@@ -26,15 +28,24 @@ const TimerContext = createContext<TimerContextProps>({
 });
 
 export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
-  const [time, setTime] = useState<number>(0);
+  // Deux états distincts pour chacun des modes
+  const [chronoTime, setChronoTime] = useState<number>(0);
+  const [timerTime, setTimerTime] = useState<number>(0);
+
+  // isRunning et mode restent globaux
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [mode, setMode] = useState<TimerMode>(() => {
     const stored = localStorage.getItem('globalMode');
     return stored === 'chrono' ? 'chrono' : 'timer';
   });
+
+  // La valeur "time" exposée correspond au temps du mode actif
+  const time = mode === 'chrono' ? chronoTime : timerTime;
+
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const socketRef = useRef<Socket | null>(null);
 
+  // Utilisation d'une ref pour disposer de la dernière valeur de mode dans tick
   const modeRef = useRef(mode);
   useEffect(() => {
     modeRef.current = mode;
@@ -46,7 +57,12 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
     socketRef.current = socket;
 
     socket.on('timerUpdate', (data: { time: number; isRunning: boolean }) => {
-      setTime(data.time);
+      // On met à jour uniquement la valeur du mode actif
+      if (modeRef.current === 'chrono') {
+        setChronoTime(data.time);
+      } else {
+        setTimerTime(data.time);
+      }
       setIsRunning(data.isRunning);
     });
 
@@ -56,20 +72,24 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const tick = () => {
-    setTime(prev => {
-      let newTime: number;
-      if (modeRef.current === 'chrono') {
-        newTime = prev + 1;
-      } else {
-        newTime = prev - 1;
-      }
-      if (modeRef.current === 'timer' && newTime <= 0) {
-        newTime = 0;
-        pause();
-      }
-      socketRef.current?.emit('updateTimer', { time: newTime, isRunning: modeRef.current === 'chrono' ? true : newTime > 0 });
-      return newTime;
-    });
+    if (modeRef.current === 'chrono') {
+      setChronoTime(prev => {
+        const newTime = prev + 1;
+        socketRef.current?.emit('updateTimer', { time: newTime, isRunning: true });
+        return newTime;
+      });
+    } else {
+      setTimerTime(prev => {
+        const newTime = prev - 1;
+        if (newTime <= 0) {
+          pause();
+          socketRef.current?.emit('updateTimer', { time: 0, isRunning: false });
+          return 0;
+        }
+        socketRef.current?.emit('updateTimer', { time: newTime, isRunning: true });
+        return newTime;
+      });
+    }
   };
 
   const start = () => {
@@ -90,13 +110,38 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
 
   const reset = (newTime: number = 0) => {
     pause();
-    setTime(newTime);
-    socketRef.current?.emit('updateTimer', { time: newTime, isRunning: false });
+    if (modeRef.current === 'chrono') {
+      setChronoTime(newTime);
+      socketRef.current?.emit('updateTimer', { time: newTime, isRunning: false });
+    } else {
+      setTimerTime(newTime);
+      socketRef.current?.emit('updateTimer', { time: newTime, isRunning: false });
+    }
   };
 
   const updateTime = (newTime: number) => {
-    setTime(newTime);
-    socketRef.current?.emit('updateTimer', { time: newTime, isRunning });
+    if (modeRef.current === 'chrono') {
+      setChronoTime(newTime);
+      socketRef.current?.emit('updateTimer', { time: newTime, isRunning });
+    } else {
+      setTimerTime(newTime);
+      socketRef.current?.emit('updateTimer', { time: newTime, isRunning });
+    }
+  };
+
+  // Nouvelle fonction pour changer de mode en s'assurant que le timer est arrêté
+  const changeMode = (newMode: TimerMode) => {
+    if (isRunning) {
+      pause();
+    }
+    // Met à jour immédiatement la ref pour que tick() utilise le bon mode
+    modeRef.current = newMode;
+    setMode(newMode);
+    
+    // Récupère la valeur de temps propre au nouveau mode
+    const newTime = newMode === 'chrono' ? chronoTime : timerTime;
+    // Met à jour le serveur avec le temps correspondant au nouveau mode
+    socketRef.current?.emit('updateTimer', { time: newTime, isRunning: false });
   };
 
   useEffect(() => {
@@ -106,7 +151,9 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <TimerContext.Provider value={{ time, isRunning, mode, start, pause, reset, updateTime, setMode }}>
+    <TimerContext.Provider
+      value={{ time, isRunning, mode, start, pause, reset, updateTime, setMode: changeMode }}
+    >
       {children}
     </TimerContext.Provider>
   );
