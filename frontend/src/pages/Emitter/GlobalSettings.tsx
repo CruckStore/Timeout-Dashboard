@@ -1,5 +1,3 @@
-// src/pages/Emitter/GlobalSettings.tsx
-
 import React, { useState, useEffect } from 'react';
 import { useTimer } from '../../context/TimerContext';
 
