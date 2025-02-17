@@ -2,14 +2,13 @@ import React, { createContext, useContext, useState, useEffect, useRef } from 'r
 import { io, Socket } from 'socket.io-client';
 
 interface DualTimerContextProps {
-  // Chronomètre (incrémente)
+  // Chronomètre (compteur qui monte)
   timeChrono: number;
   isRunningChrono: boolean;
   startChrono: () => void;
   pauseChrono: () => void;
   resetChrono: (newTime?: number) => void;
-
-  // Timer (décrémente)
+  // Timer (compteur qui descend)
   timeTimer: number;
   isRunningTimer: boolean;
   startTimer: () => void;
@@ -27,60 +26,61 @@ const DualTimerContext = createContext<DualTimerContextProps>({
   isRunningTimer: false,
   startTimer: () => {},
   pauseTimer: () => {},
-  resetTimer: () => {}
+  resetTimer: () => {},
 });
 
 export const DualTimerProvider = ({ children }: { children: React.ReactNode }) => {
-  // -- Chronomètre --
+  // Chronomètre : compteur qui monte
   const [timeChrono, setTimeChrono] = useState<number>(0);
   const [isRunningChrono, setIsRunningChrono] = useState<boolean>(false);
   const chronoIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // -- Timer --
+  // Timer : compteur qui descend
   const [timeTimer, setTimeTimer] = useState<number>(0);
   const [isRunningTimer, setIsRunningTimer] = useState<boolean>(false);
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Socket unique pour synchroniser tout
+  // Socket unique pour la synchronisation (émetteur/récepteurs)
   const socketRef = useRef<Socket | null>(null);
 
-  // ---------------------------------------------------
-  // 1. INITIALISATION DE LA SOCKET
-  // ---------------------------------------------------
   useEffect(() => {
     const socket = io('http://localhost:5000');
     socketRef.current = socket;
-
-    // Lorsque le serveur émet un "dualTimerUpdate", on met à jour localement
     socket.on('dualTimerUpdate', (data: any) => {
-      setTimeChrono(data.timeChrono);
-      setIsRunningChrono(data.isRunningChrono);
-      setTimeTimer(data.timeTimer);
-      setIsRunningTimer(data.isRunningTimer);
+      if (typeof data.timeChrono === 'number') setTimeChrono(data.timeChrono);
+      if (typeof data.isRunningChrono === 'boolean') setIsRunningChrono(data.isRunningChrono);
+      if (typeof data.timeTimer === 'number') setTimeTimer(data.timeTimer);
+      if (typeof data.isRunningTimer === 'boolean') setIsRunningTimer(data.isRunningTimer);
     });
-
     return () => {
       socket.disconnect();
     };
   }, []);
 
-  // ---------------------------------------------------
-  // 2. CHRONOMÈTRE : start/pause/reset
-  // ---------------------------------------------------
+  // Fonction d'émission : on envoie l'état complet afin de synchroniser tous les clients
+  const emitUpdate = (partialData: any) => {
+    const data = {
+      timeChrono,
+      isRunningChrono,
+      timeTimer,
+      isRunningTimer,
+      ...partialData,
+    };
+    socketRef.current?.emit('dualTimerUpdate', data);
+  };
+
+  // ================= Chronomètre (compteur qui monte) =================
   const startChrono = () => {
-    if (isRunningChrono) return; // déjà en cours
+    if (isRunningChrono) return;
     setIsRunningChrono(true);
-    // Lancement d'un intervalle qui incrémente chaque seconde
     chronoIntervalRef.current = setInterval(() => {
       setTimeChrono(prev => {
         const newTime = prev + 1;
-        emitDualTimerUpdate({ timeChrono: newTime, isRunningChrono: true });
+        emitUpdate({ timeChrono: newTime, isRunningChrono: true });
         return newTime;
       });
     }, 1000);
-
-    // Émission socket
-    emitDualTimerUpdate({ isRunningChrono: true });
+    emitUpdate({ isRunningChrono: true });
   };
 
   const pauseChrono = () => {
@@ -89,40 +89,33 @@ export const DualTimerProvider = ({ children }: { children: React.ReactNode }) =
       clearInterval(chronoIntervalRef.current);
       chronoIntervalRef.current = null;
     }
-    // Émission socket
-    emitDualTimerUpdate({ isRunningChrono: false });
+    emitUpdate({ isRunningChrono: false });
   };
 
   const resetChrono = (newTime: number = 0) => {
-    pauseChrono(); // Arrête le chrono
+    pauseChrono();
     setTimeChrono(newTime);
-    // Émission socket
-    emitDualTimerUpdate({ timeChrono: newTime });
+    emitUpdate({ timeChrono: newTime });
   };
 
-  // ---------------------------------------------------
-  // 3. TIMER (compte à rebours) : start/pause/reset
-  // ---------------------------------------------------
+  // ================= Timer (compteur qui descend) =================
   const startTimer = () => {
-    if (isRunningTimer) return; // déjà en cours
-    if (timeTimer <= 0) return; // rien à décrémenter
+    if (isRunningTimer) return;
+    if (timeTimer <= 0) return; // ne démarre pas si le temps est nul
     setIsRunningTimer(true);
-    // Lancement d'un intervalle qui décrémente chaque seconde
     timerIntervalRef.current = setInterval(() => {
       setTimeTimer(prev => {
         if (prev <= 1) {
-          // Arrivé à 0 => on arrête
           pauseTimer();
+          emitUpdate({ timeTimer: 0, isRunningTimer: false });
           return 0;
         }
         const newTime = prev - 1;
-        emitDualTimerUpdate({ timeTimer: newTime, isRunningTimer: true });
+        emitUpdate({ timeTimer: newTime, isRunningTimer: true });
         return newTime;
       });
     }, 1000);
-
-    // Émission socket
-    emitDualTimerUpdate({ isRunningTimer: true });
+    emitUpdate({ isRunningTimer: true });
   };
 
   const pauseTimer = () => {
@@ -131,33 +124,15 @@ export const DualTimerProvider = ({ children }: { children: React.ReactNode }) =
       clearInterval(timerIntervalRef.current);
       timerIntervalRef.current = null;
     }
-    // Émission socket
-    emitDualTimerUpdate({ isRunningTimer: false });
+    emitUpdate({ isRunningTimer: false });
   };
 
   const resetTimer = (newTime: number = 0) => {
-    pauseTimer(); // Arrête le timer
+    pauseTimer();
     setTimeTimer(newTime);
-    // Émission socket
-    emitDualTimerUpdate({ timeTimer: newTime });
+    emitUpdate({ timeTimer: newTime });
   };
 
-  // ---------------------------------------------------
-  // 4. Émettre l'état complet via Socket.IO
-  // ---------------------------------------------------
-  const emitDualTimerUpdate = (partialData: any) => {
-    // Récupère l'état actuel + la partialData pour émettre un snapshot complet
-    const newData = {
-      timeChrono,
-      isRunningChrono,
-      timeTimer,
-      isRunningTimer,
-      ...partialData
-    };
-    socketRef.current?.emit('dualTimerUpdate', newData);
-  };
-
-  // Nettoyage
   useEffect(() => {
     return () => {
       if (chronoIntervalRef.current) clearInterval(chronoIntervalRef.current);
@@ -165,9 +140,6 @@ export const DualTimerProvider = ({ children }: { children: React.ReactNode }) =
     };
   }, []);
 
-  // ---------------------------------------------------
-  // 5. Rendu du Provider
-  // ---------------------------------------------------
   return (
     <DualTimerContext.Provider
       value={{
@@ -180,7 +152,7 @@ export const DualTimerProvider = ({ children }: { children: React.ReactNode }) =
         isRunningTimer,
         startTimer,
         pauseTimer,
-        resetTimer
+        resetTimer,
       }}
     >
       {children}
