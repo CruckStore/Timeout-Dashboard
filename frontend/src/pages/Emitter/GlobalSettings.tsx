@@ -1,17 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTimer } from '../../context/TimerContext';
 
 const GlobalSettings = () => {
-  const { time, start, pause, reset, updateTime, isRunning } = useTimer();
+  const { time, start, pause, reset, updateTime, isRunning, mode, setMode } = useTimer();
   const [inputTime, setInputTime] = useState<number>(0);
-  const [mode, setMode] = useState<'timer' | 'chrono'>(() => {
-    const stored = localStorage.getItem('globalMode');
-    return stored === 'chrono' ? 'chrono' : 'timer';
-  });
-
-  useEffect(() => {
-    localStorage.setItem('globalMode', mode);
-  }, [mode]);
 
   return (
     <div className="card global-settings">
@@ -64,7 +56,7 @@ const GlobalSettings = () => {
             checked={mode === 'timer'}
             onChange={() => setMode('timer')}
           />
-          Timer
+          Timer (Compte à rebours)
         </label>
         <label>
           <input
@@ -73,7 +65,7 @@ const GlobalSettings = () => {
             checked={mode === 'chrono'}
             onChange={() => setMode('chrono')}
           />
-          Chrono
+          Chrono (Chronomètre)
         </label>
       </div>
     </div>

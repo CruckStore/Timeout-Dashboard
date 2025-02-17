@@ -1,29 +1,45 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 
+export type TimerMode = 'chrono' | 'timer';
+
 interface TimerContextProps {
   time: number;           
   isRunning: boolean;
+  mode: TimerMode;
   start: () => void;      
   pause: () => void;      
   reset: (newTime?: number) => void;
   updateTime: (newTime: number) => void;
+  setMode: (newMode: TimerMode) => void;
 }
 
 const TimerContext = createContext<TimerContextProps>({
   time: 0,
   isRunning: false,
+  mode: 'timer',
   start: () => {},
   pause: () => {},
   reset: () => {},
-  updateTime: () => {}
+  updateTime: () => {},
+  setMode: () => {}
 });
 
 export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
   const [time, setTime] = useState<number>(0);
   const [isRunning, setIsRunning] = useState<boolean>(false);
+  const [mode, setMode] = useState<TimerMode>(() => {
+    const stored = localStorage.getItem('globalMode');
+    return stored === 'chrono' ? 'chrono' : 'timer';
+  });
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const socketRef = useRef<Socket | null>(null);
+
+  const modeRef = useRef(mode);
+  useEffect(() => {
+    modeRef.current = mode;
+    localStorage.setItem('globalMode', mode);
+  }, [mode]);
 
   useEffect(() => {
     const socket = io('http://localhost:5000');
@@ -41,8 +57,17 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
 
   const tick = () => {
     setTime(prev => {
-      const newTime = prev + 1;
-      socketRef.current?.emit('updateTimer', { time: newTime, isRunning: true });
+      let newTime: number;
+      if (modeRef.current === 'chrono') {
+        newTime = prev + 1;
+      } else {
+        newTime = prev - 1;
+      }
+      if (modeRef.current === 'timer' && newTime <= 0) {
+        newTime = 0;
+        pause();
+      }
+      socketRef.current?.emit('updateTimer', { time: newTime, isRunning: modeRef.current === 'chrono' ? true : newTime > 0 });
       return newTime;
     });
   };
@@ -81,7 +106,7 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <TimerContext.Provider value={{ time, isRunning, start, pause, reset, updateTime }}>
+    <TimerContext.Provider value={{ time, isRunning, mode, start, pause, reset, updateTime, setMode }}>
       {children}
     </TimerContext.Provider>
   );
