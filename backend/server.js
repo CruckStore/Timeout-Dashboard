@@ -47,6 +47,10 @@ io.on('connection', (socket) => {
     io.emit("mainScreenUpdate", data);
   });
 
+  socket.on("secondaryScreenUpdate", (data) => {
+    io.emit("secondaryScreenUpdate", data);
+  });
+
   socket.on('disconnect', () => {
     console.log('Déconnexion:', socket.id);
   });
@@ -54,5 +58,5 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
-  console.log(`Serveur en écoute sur le port ${PORT}`);
+  console.log(`Serveur en listening on the port megaport incredible woaw --> (english les mecs learner) sur le port ${PORT}`);
 });
