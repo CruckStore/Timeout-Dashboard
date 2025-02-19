@@ -64,7 +64,6 @@ app.get("/", (req, res) => {
             text-decoration: none;
             font-weight: bold;
           }
-          /* Indicateur "up" en vert, "down" en rouge (vous pouvez adapter selon votre logique) */
           .up {
             background-color: #e8f5e9;
             color: #2e7d32;
