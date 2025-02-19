@@ -34,6 +34,7 @@ export const ChronometerProvider = ({
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const start = () => {
+    console.log("Chronomètre démarré");
     if (!isRunning) {
       setIsRunning(true);
       intervalRef.current = setInterval(() => {
@@ -57,6 +58,7 @@ export const ChronometerProvider = ({
 
   const updateTime = (newTime: number) => {
     setTime(newTime);
+    console.log("Temps mis à jour :", newTime);
   };
 
   useEffect(() => {
