@@ -10,7 +10,7 @@ const MainScreenSettings = () => {
     };
   }, []);
 
-  const [theme, setTheme] = useState(() => localStorage.getItem('mainScreenTheme') || 'écran principal');
+  const [theme, setTheme] = useState(() => localStorage.getItem('mainScreenTheme') || 'Ecran principal');
 
   const [activeMediaType, setActiveMediaType] = useState<'img' | 'video' | 'texte'>(() => {
     const stored = localStorage.getItem('mainScreenMediaTypeActive');
@@ -92,25 +92,25 @@ const MainScreenSettings = () => {
       mediaContent: getCurrentMediaContent(),
     };
     socketRef.current?.emit("mainScreenUpdate", data);
-    alert("Modifications enregistrées pour l'Écran Principal");
+    alert("Modifications enregistrEes pour l'Ecran Principal");
   };
 
   return (
     <div className="card main-screen-settings">
-      <h2>Écran Principal</h2>
+      <h2>Ecran Principal</h2>
 
       <div className="theme-selection">
-        <p>Sélectionnez le thème :</p>
+        <p>SElectionnez le thème :</p>
         <select value={theme} onChange={(e) => setTheme(e.target.value)}>
-          <option value="écran principal">Écran Principal</option>
+          <option value="Ecran principal">Ecran Principal</option>
           <option value="chrono">Chrono</option>
           <option value="texte">Texte</option>
-          <option value="écran secondaire">Écran Secondaire</option>
+          <option value="Ecran secondaire">Ecran Secondaire</option>
         </select>
       </div>
 
       <div className="media-type-selection">
-        <p>Sélectionnez le type de média à afficher :</p>
+        <p>SElectionnez le type de mEdia à afficher :</p>
         <label>
           <input
             type="radio"
@@ -127,7 +127,7 @@ const MainScreenSettings = () => {
             checked={activeMediaType === 'video'}
             onChange={() => setActiveMediaType('video')}
           />
-          Vidéo
+          VidEo
         </label>
         <label>
           <input
@@ -141,7 +141,7 @@ const MainScreenSettings = () => {
       </div>
 
       <div className="media-settings">
-        <p>Configurer les médias :</p>
+        <p>Configurer les mEdias :</p>
 
         <div className="media-config">
           <label>Image URL :</label>
@@ -156,10 +156,10 @@ const MainScreenSettings = () => {
         </div>
 
         <div className="media-config">
-          <label>Vidéo URL :</label>
+          <label>VidEo URL :</label>
           <input
             type="text"
-            placeholder="Entrez l'URL de la vidéo"
+            placeholder="Entrez l'URL de la vidEo"
             value={mediaContentVideo}
             onChange={(e) => setMediaContentVideo(e.target.value)}
           />

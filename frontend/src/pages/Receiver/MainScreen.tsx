@@ -4,7 +4,7 @@ import TimerDisplay from '../../components/TimerDisplay';
 import logo from '../../assets/logo.png';
 
 const MainScreen = () => {
-  const [theme, setTheme] = useState(localStorage.getItem('mainScreenTheme') || 'écran principal');
+  const [theme, setTheme] = useState(localStorage.getItem('mainScreenTheme') || 'Ecran principal');
   const [mediaType, setMediaType] = useState<'img' | 'video' | 'texte'>(
     (localStorage.getItem('mainScreenMediaType') as 'img' | 'video' | 'texte') || 'img'
   );

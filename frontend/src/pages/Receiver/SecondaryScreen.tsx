@@ -5,7 +5,7 @@ import logo from '../../assets/logo.png';
 
 const SecondaryScreen = () => {
   const [theme, setTheme] = useState(
-    localStorage.getItem('secondaryScreenTheme') || 'écran secondaire'
+    localStorage.getItem('secondaryScreenTheme') || 'Ecran secondaire'
   );
 
   const [mediaType, setMediaType] = useState<'img' | 'video' | 'texte'>(
