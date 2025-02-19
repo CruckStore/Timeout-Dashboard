@@ -107,7 +107,7 @@ const MainScreen = () => {
       />
       <div className="timer" style={{ position: 'relative', zIndex: 1 }}>
         {(mediaType === 'texte' && mediaContent) ? (
-          <h1>{mediaContent}</h1>
+          <p className='textemediamain'>{mediaContent}</p>
         ) : (
           <TimerDisplay />
         )}
