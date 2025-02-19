@@ -150,6 +150,12 @@ h1 {
   margin-bottom: 50px;
 }
 
+.global-settings {
+    display: flex;
+    flex-direction: column;
+    color: white;
+}
+
 .button-group button {
   width: 300px;
   height: 105px;
@@ -162,7 +168,6 @@ h1 {
 
 .global-settings {
   display: flex;
-  flex-direction: row;
 }
 
 .global-settings1 {
