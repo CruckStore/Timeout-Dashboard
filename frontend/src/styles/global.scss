@@ -44,7 +44,7 @@ input {
   font-weight: 400;
   line-height: normal;
 }
-.timer h1  {
+.timer h1 {
   font-size: 250px;
 }
 
@@ -86,6 +86,18 @@ input {
 
 .secondary-screen .timer {
   font-size: 100px;
+}
+
+.textemediasecondary {
+  font-size: 100px !important;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 0px;
+  color: white;
+  font-size: 2em;
 }
 
 .countdown-screen {

@@ -124,9 +124,9 @@ const SecondaryScreen = () => {
         <img src={logo} alt="Logo" className="logo" />
       </div>
 
-      <div className="timer" style={{ position: 'relative', zIndex: 1, textAlign: 'center', marginTop: '20px' }}>
+      <div className="timer" style={{ position: 'relative', zIndex: 1, textAlign: 'center'}}>
         {(mediaType === 'texte' && mediaContent) ? (
-          <h1 style={{ color: '#fff' }}>{mediaContent}</h1>
+          <p className='textemediasecondary' style={{ color: '#fff' }}>{mediaContent}</p>
         ) : (
           <TimerDisplay />
         )}
