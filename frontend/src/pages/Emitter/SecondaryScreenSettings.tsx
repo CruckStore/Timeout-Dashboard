@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { io, Socket } from 'socket.io-client';
+import { useState, useEffect, useRef } from "react";
+import { io, Socket } from "socket.io-client";
 
 const SecondaryScreenSettings = () => {
   const socketRef = useRef<Socket | null>(null);
@@ -11,86 +11,95 @@ const SecondaryScreenSettings = () => {
     };
   }, []);
 
-  const [activeMediaType, setActiveMediaType] = useState<'img' | 'video' | 'texte'>(() => {
-    const stored = localStorage.getItem('secondaryScreenMediaTypeActive');
-    return stored === 'video' || stored === 'texte' ? stored : 'img';
+  const [activeMediaType, setActiveMediaType] = useState<
+    "img" | "video" | "texte"
+  >(() => {
+    const stored = localStorage.getItem("secondaryScreenMediaTypeActive");
+    return stored === "video" || stored === "texte" ? stored : "img";
   });
 
-  const [mediaContentImg, setMediaContentImg] = useState(() =>
-    localStorage.getItem('secondaryScreenMediaContentImg') || ''
+  const [mediaContentImg, setMediaContentImg] = useState(
+    () => localStorage.getItem("secondaryScreenMediaContentImg") || ""
   );
-  const [mediaContentVideo, setMediaContentVideo] = useState(() =>
-    localStorage.getItem('secondaryScreenMediaContentVideo') || ''
+  const [mediaContentVideo, setMediaContentVideo] = useState(
+    () => localStorage.getItem("secondaryScreenMediaContentVideo") || ""
   );
-  const [mediaContentTexte, setMediaContentTexte] = useState(() =>
-    localStorage.getItem('secondaryScreenMediaContentTexte') || ''
+  const [mediaContentTexte, setMediaContentTexte] = useState(
+    () => localStorage.getItem("secondaryScreenMediaContentTexte") || ""
   );
 
   useEffect(() => {
-    localStorage.setItem('secondaryScreenMediaTypeActive', activeMediaType);
+    localStorage.setItem("secondaryScreenMediaTypeActive", activeMediaType);
   }, [activeMediaType]);
 
   useEffect(() => {
-    localStorage.setItem('secondaryScreenMediaContentImg', mediaContentImg);
+    localStorage.setItem("secondaryScreenMediaContentImg", mediaContentImg);
   }, [mediaContentImg]);
 
   useEffect(() => {
-    localStorage.setItem('secondaryScreenMediaContentVideo', mediaContentVideo);
+    localStorage.setItem("secondaryScreenMediaContentVideo", mediaContentVideo);
   }, [mediaContentVideo]);
 
   useEffect(() => {
-    localStorage.setItem('secondaryScreenMediaContentTexte', mediaContentTexte);
+    localStorage.setItem("secondaryScreenMediaContentTexte", mediaContentTexte);
   }, [mediaContentTexte]);
 
   const getCurrentMediaContent = () => {
-    if (activeMediaType === 'img') return mediaContentImg;
-    if (activeMediaType === 'video') return mediaContentVideo;
-    if (activeMediaType === 'texte') return mediaContentTexte;
-    return '';
+    if (activeMediaType === "img") return mediaContentImg;
+    if (activeMediaType === "video") return mediaContentVideo;
+    if (activeMediaType === "texte") return mediaContentTexte;
+    return "";
   };
 
   const handleSetImg = () => {
     socketRef.current?.emit("secondaryScreenUpdate", {
       mediaType: activeMediaType,
-      mediaContent: activeMediaType === 'img' ? mediaContentImg : getCurrentMediaContent(),
+      mediaContent:
+        activeMediaType === "img" ? mediaContentImg : getCurrentMediaContent(),
     });
   };
 
   const handleResetImg = () => {
-    setMediaContentImg('');
+    setMediaContentImg("");
     socketRef.current?.emit("secondaryScreenUpdate", {
       mediaType: activeMediaType,
-      mediaContent: activeMediaType === 'img' ? '' : getCurrentMediaContent(),
+      mediaContent: activeMediaType === "img" ? "" : getCurrentMediaContent(),
     });
   };
 
   const handleSetVideo = () => {
     socketRef.current?.emit("secondaryScreenUpdate", {
       mediaType: activeMediaType,
-      mediaContent: activeMediaType === 'video' ? mediaContentVideo : getCurrentMediaContent(),
+      mediaContent:
+        activeMediaType === "video"
+          ? mediaContentVideo
+          : getCurrentMediaContent(),
     });
   };
 
   const handleResetVideo = () => {
-    setMediaContentVideo('');
+    setMediaContentVideo("");
     socketRef.current?.emit("secondaryScreenUpdate", {
       mediaType: activeMediaType,
-      mediaContent: activeMediaType === 'video' ? '' : getCurrentMediaContent(),
+      mediaContent: activeMediaType === "video" ? "" : getCurrentMediaContent(),
     });
   };
 
   const handleSetTexte = () => {
     socketRef.current?.emit("secondaryScreenUpdate", {
       mediaType: activeMediaType,
-      mediaContent: activeMediaType === 'texte' ? mediaContentTexte : getCurrentMediaContent(),
+      mediaContent:
+        activeMediaType === "texte"
+          ? mediaContentTexte
+          : getCurrentMediaContent(),
     });
   };
 
   const handleResetTexte = () => {
-    setMediaContentTexte('');
+    setMediaContentTexte("");
     socketRef.current?.emit("secondaryScreenUpdate", {
       mediaType: activeMediaType,
-      mediaContent: activeMediaType === 'texte' ? '' : getCurrentMediaContent(),
+      mediaContent: activeMediaType === "texte" ? "" : getCurrentMediaContent(),
     });
   };
 
@@ -113,8 +122,8 @@ const SecondaryScreenSettings = () => {
           <input
             type="radio"
             value="img"
-            checked={activeMediaType === 'img'}
-            onChange={() => setActiveMediaType('img')}
+            checked={activeMediaType === "img"}
+            onChange={() => setActiveMediaType("img")}
           />
           Image
         </label>
@@ -122,8 +131,8 @@ const SecondaryScreenSettings = () => {
           <input
             type="radio"
             value="video"
-            checked={activeMediaType === 'video'}
-            onChange={() => setActiveMediaType('video')}
+            checked={activeMediaType === "video"}
+            onChange={() => setActiveMediaType("video")}
           />
           Vidéo
         </label>
@@ -131,8 +140,8 @@ const SecondaryScreenSettings = () => {
           <input
             type="radio"
             value="texte"
-            checked={activeMediaType === 'texte'}
-            onChange={() => setActiveMediaType('texte')}
+            checked={activeMediaType === "texte"}
+            onChange={() => setActiveMediaType("texte")}
           />
           Texte
         </label>

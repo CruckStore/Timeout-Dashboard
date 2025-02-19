@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -7,8 +7,8 @@ const Dashboard = () => {
     <div className="dashboard-container">
       <h1>Dashboard Timeout</h1>
       <div className="button-group">
-        <button onClick={() => navigate('/emitter')}>Emetteur</button>
-        <button onClick={() => navigate('/receiver')}>Recepteur</button>
+        <button onClick={() => navigate("/emitter")}>Emetteur</button>
+        <button onClick={() => navigate("/receiver")}>Recepteur</button>
       </div>
     </div>
   );

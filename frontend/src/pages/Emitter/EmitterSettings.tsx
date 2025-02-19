@@ -1,6 +1,6 @@
-import GlobalSettings from './GlobalSettings';
-import MainScreenSettings from './MainScreenSettings';
-import SecondaryScreenSettings from './SecondaryScreenSettings';
+import GlobalSettings from "./GlobalSettings";
+import MainScreenSettings from "./MainScreenSettings";
+import SecondaryScreenSettings from "./SecondaryScreenSettings";
 
 const EmitterSettings = () => {
   return (

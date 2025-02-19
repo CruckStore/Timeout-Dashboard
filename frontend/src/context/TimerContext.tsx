@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useEffect, useRef } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+} from "react";
 import { io, Socket } from "socket.io-client";
 
 export type TimerMode = "chrono" | "timer";
@@ -67,7 +73,10 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
     if (modeRef.current === "chrono") {
       setChronoTime((prev) => {
         const newTime = prev + 1;
-        socketRef.current?.emit("updateTimer", { time: newTime, isRunning: true });
+        socketRef.current?.emit("updateTimer", {
+          time: newTime,
+          isRunning: true,
+        });
         return newTime;
       });
     } else {
@@ -78,7 +87,10 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
           socketRef.current?.emit("updateTimer", { time: 0, isRunning: false });
           return 0;
         }
-        socketRef.current?.emit("updateTimer", { time: newTime, isRunning: true });
+        socketRef.current?.emit("updateTimer", {
+          time: newTime,
+          isRunning: true,
+        });
         return newTime;
       });
     }
@@ -108,10 +120,16 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
     pause();
     if (modeRef.current === "chrono") {
       setChronoTime(newTime);
-      socketRef.current?.emit("updateTimer", { time: newTime, isRunning: false });
+      socketRef.current?.emit("updateTimer", {
+        time: newTime,
+        isRunning: false,
+      });
     } else {
       setTimerTime(newTime);
-      socketRef.current?.emit("updateTimer", { time: newTime, isRunning: false });
+      socketRef.current?.emit("updateTimer", {
+        time: newTime,
+        isRunning: false,
+      });
     }
   };
 
@@ -140,7 +158,18 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <TimerContext.Provider value={{ time, isRunning, mode, start, pause, reset, updateTime, setMode: changeMode }}>
+    <TimerContext.Provider
+      value={{
+        time,
+        isRunning,
+        mode,
+        start,
+        pause,
+        reset,
+        updateTime,
+        setMode: changeMode,
+      }}
+    >
       {children}
     </TimerContext.Provider>
   );

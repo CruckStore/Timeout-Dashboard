@@ -1,8 +1,7 @@
-// server/index.js (ou app.js)
-const express = require('express');
-const http = require('http');
-const cors = require('cors');
-const { Server } = require('socket.io');
+const express = require("express");
+const http = require("http");
+const cors = require("cors");
+const { Server } = require("socket.io");
 
 const app = express();
 const server = http.createServer(app);
@@ -10,16 +9,15 @@ const server = http.createServer(app);
 app.use(cors());
 app.use(express.json());
 
-// Exemple d'utilisation de routes d'authentification ou de timer si nécessaire
-const authRoutes = require('./routes/auth');
-const timerRoutes = require('./routes/timer');
-app.use('/api/auth', authRoutes);
-app.use('/api/timer', timerRoutes);
+const authRoutes = require("./routes/auth");
+const timerRoutes = require("./routes/timer");
+app.use("/api/auth", authRoutes);
+app.use("/api/timer", timerRoutes);
 
 const io = new Server(server, {
   cors: {
-    origin: '*',
-  }
+    origin: "*",
+  },
 });
 
 let timerState = {
@@ -27,21 +25,20 @@ let timerState = {
   isRunning: false,
 };
 
-io.on('connection', (socket) => {
-  console.log('Nouvelle connexion:', socket.id);
+io.on("connection", (socket) => {
+  console.log("Nouvelle connexion:", socket.id);
 
-  // Lorsqu'un client se connecte, on lui envoie l'état actuel du timer
-  socket.emit('timerUpdate', timerState);
+  socket.emit("timerUpdate", timerState);
 
-  socket.on('updateTimer', (data) => {
+  socket.on("updateTimer", (data) => {
     timerState.time = data.time;
     timerState.isRunning = data.isRunning;
-    io.emit('timerUpdate', timerState);
+    io.emit("timerUpdate", timerState);
   });
 
-  socket.on('toggleTimer', (data) => {
+  socket.on("toggleTimer", (data) => {
     timerState.isRunning = data.isRunning;
-    io.emit('timerUpdate', timerState);
+    io.emit("timerUpdate", timerState);
   });
 
   socket.on("mainScreenUpdate", (data) => {
@@ -52,8 +49,8 @@ io.on('connection', (socket) => {
     io.emit("secondaryScreenUpdate", data);
   });
 
-  socket.on('disconnect', () => {
-    console.log('Déconnexion:', socket.id);
+  socket.on("disconnect", () => {
+    console.log("Déconnexion:", socket.id);
   });
 });
 

@@ -1,5 +1,5 @@
-import { useTimer } from '../context/TimerContext';
-import { formatTime } from '../utils/timeUtils';
+import { useTimer } from "../context/TimerContext";
+import { formatTime } from "../utils/timeUtils";
 
 const TimerDisplay = () => {
   const { time } = useTimer();

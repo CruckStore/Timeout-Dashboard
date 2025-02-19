@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useEffect, useRef } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+} from "react";
 
 interface ChronometerContextProps {
   time: number;
@@ -18,7 +24,11 @@ const ChronometerContext = createContext<ChronometerContextProps>({
   updateTime: () => {},
 });
 
-export const ChronometerProvider = ({ children }: { children: React.ReactNode }) => {
+export const ChronometerProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [time, setTime] = useState<number>(0);
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);

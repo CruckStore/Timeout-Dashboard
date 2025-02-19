@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from "react";
 
 interface AuthContextProps {
   isAuthenticated: boolean;
@@ -9,37 +9,37 @@ interface AuthContextProps {
 const AuthContext = createContext<AuthContextProps>({
   isAuthenticated: false,
   login: async () => false,
-  logout: () => {}
+  logout: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setAuthenticated] = useState<boolean>(() => {
-    return localStorage.getItem('isAuthenticated') === 'true';
+    return localStorage.getItem("isAuthenticated") === "true";
   });
 
   const login = async (username: string, password: string) => {
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
+      const response = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
       });
       if (response.ok) {
         setAuthenticated(true);
-        localStorage.setItem('isAuthenticated', 'true');
+        localStorage.setItem("isAuthenticated", "true");
         return true;
       } else {
         return false;
       }
     } catch (error) {
-      console.error('Erreur lors de la connexion:', error);
+      console.error("Erreur lors de la connexion:", error);
       return false;
     }
   };
 
   const logout = () => {
     setAuthenticated(false);
-    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem("isAuthenticated");
   };
 
   return (
