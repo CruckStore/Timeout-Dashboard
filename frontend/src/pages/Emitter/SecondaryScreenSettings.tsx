@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 
 const SecondaryScreenSettings = () => {
@@ -11,7 +11,6 @@ const SecondaryScreenSettings = () => {
     };
   }, []);
 
-  const [theme, setTheme] = useState(() => localStorage.getItem('secondaryScreenTheme') || 'Ecran secondaire');
 
   const [activeMediaType, setActiveMediaType] = useState<'img' | 'video' | 'texte'>(() => {
     const stored = localStorage.getItem('secondaryScreenMediaTypeActive');
@@ -22,7 +21,6 @@ const SecondaryScreenSettings = () => {
   const [mediaContentVideo, setMediaContentVideo] = useState(() => localStorage.getItem('secondaryScreenMediaContentVideo') || '');
   const [mediaContentTexte, setMediaContentTexte] = useState(() => localStorage.getItem('secondaryScreenMediaContentTexte') || '');
 
-  useEffect(() => { localStorage.setItem('secondaryScreenTheme', theme); }, [theme]);
   useEffect(() => { localStorage.setItem('secondaryScreenMediaTypeActive', activeMediaType); }, [activeMediaType]);
   useEffect(() => { localStorage.setItem('secondaryScreenMediaContentImg', mediaContentImg); }, [mediaContentImg]);
   useEffect(() => { localStorage.setItem('secondaryScreenMediaContentVideo', mediaContentVideo); }, [mediaContentVideo]);
@@ -37,7 +35,6 @@ const SecondaryScreenSettings = () => {
 
   const handleSetImg = () => {
     socketRef.current?.emit("secondaryScreenUpdate", {
-      theme,
       mediaType: activeMediaType,
       mediaContent: (activeMediaType === 'img') ? mediaContentImg : getCurrentMediaContent(),
     });
@@ -46,7 +43,6 @@ const SecondaryScreenSettings = () => {
   const handleResetImg = () => {
     setMediaContentImg('');
     socketRef.current?.emit("secondaryScreenUpdate", {
-      theme,
       mediaType: activeMediaType,
       mediaContent: (activeMediaType === 'img') ? '' : getCurrentMediaContent(),
     });
@@ -54,7 +50,6 @@ const SecondaryScreenSettings = () => {
 
   const handleSetVideo = () => {
     socketRef.current?.emit("secondaryScreenUpdate", {
-      theme,
       mediaType: activeMediaType,
       mediaContent: (activeMediaType === 'video') ? mediaContentVideo : getCurrentMediaContent(),
     });
@@ -63,7 +58,6 @@ const SecondaryScreenSettings = () => {
   const handleResetVideo = () => {
     setMediaContentVideo('');
     socketRef.current?.emit("secondaryScreenUpdate", {
-      theme,
       mediaType: activeMediaType,
       mediaContent: (activeMediaType === 'video') ? '' : getCurrentMediaContent(),
     });
@@ -71,7 +65,6 @@ const SecondaryScreenSettings = () => {
 
   const handleSetTexte = () => {
     socketRef.current?.emit("secondaryScreenUpdate", {
-      theme,
       mediaType: activeMediaType,
       mediaContent: (activeMediaType === 'texte') ? mediaContentTexte : getCurrentMediaContent(),
     });
@@ -80,7 +73,6 @@ const SecondaryScreenSettings = () => {
   const handleResetTexte = () => {
     setMediaContentTexte('');
     socketRef.current?.emit("secondaryScreenUpdate", {
-      theme,
       mediaType: activeMediaType,
       mediaContent: (activeMediaType === 'texte') ? '' : getCurrentMediaContent(),
     });
@@ -88,7 +80,6 @@ const SecondaryScreenSettings = () => {
 
   const handleSave = () => {
     const data = {
-      theme,
       mediaType: activeMediaType,
       mediaContent: getCurrentMediaContent(),
     };
@@ -99,16 +90,6 @@ const SecondaryScreenSettings = () => {
   return (
     <div className="card secondary-screen-settings">
       <h2>Ecran Secondaire</h2>
-
-      <div className="theme-selection">
-        <p>SElectionnez le thème :</p>
-        <select value={theme} onChange={(e) => setTheme(e.target.value)}>
-          <option value="Ecran principal">Ecran Principal</option>
-          <option value="chrono">Chrono</option>
-          <option value="texte">Texte</option>
-          <option value="Ecran secondaire">Ecran Secondaire</option>
-        </select>
-      </div>
 
       <div className="media-type-selection">
         <p>SElectionnez le type de mEdia à afficher :</p>

@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 import TimerDisplay from '../../components/TimerDisplay';
 import logo from '../../assets/logo.png';
 
 const MainScreen = () => {
-  const [theme, setTheme] = useState(localStorage.getItem('mainScreenTheme') || 'Ecran principal');
   const [mediaType, setMediaType] = useState<'img' | 'video' | 'texte'>(
     (localStorage.getItem('mainScreenMediaType') as 'img' | 'video' | 'texte') || 'img'
   );
@@ -22,7 +21,6 @@ const MainScreen = () => {
   useEffect(() => {
     socketRef.current = io("http://localhost:5000");
     socketRef.current.on("mainScreenUpdate", (data) => {
-      setTheme(data.theme);
       setMediaType(data.mediaType);
       if (data.mediaType === "img") setMediaContentImg(data.mediaContent);
       else if (data.mediaType === "video") setMediaContentVideo(data.mediaContent);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 
 const MainScreenSettings = () => {
@@ -10,8 +10,6 @@ const MainScreenSettings = () => {
     };
   }, []);
 
-  const [theme, setTheme] = useState(() => localStorage.getItem('mainScreenTheme') || 'Ecran principal');
-
   const [activeMediaType, setActiveMediaType] = useState<'img' | 'video' | 'texte'>(() => {
     const stored = localStorage.getItem('mainScreenMediaTypeActive');
     return stored === 'video' || stored === 'texte' ? stored : 'img';
@@ -21,7 +19,6 @@ const MainScreenSettings = () => {
   const [mediaContentVideo, setMediaContentVideo] = useState(() => localStorage.getItem('mainScreenMediaContentVideo') || '');
   const [mediaContentTexte, setMediaContentTexte] = useState(() => localStorage.getItem('mainScreenMediaContentTexte') || '');
 
-  useEffect(() => { localStorage.setItem('mainScreenTheme', theme); }, [theme]);
   useEffect(() => { localStorage.setItem('mainScreenMediaTypeActive', activeMediaType); }, [activeMediaType]);
   useEffect(() => { localStorage.setItem('mainScreenMediaContentImg', mediaContentImg); }, [mediaContentImg]);
   useEffect(() => { localStorage.setItem('mainScreenMediaContentVideo', mediaContentVideo); }, [mediaContentVideo]);
@@ -29,7 +26,6 @@ const MainScreenSettings = () => {
 
   const handleSetImg = () => {
     socketRef.current?.emit("mainScreenUpdate", {
-      theme,
       mediaType: activeMediaType,
       mediaContent: activeMediaType === 'img' ? mediaContentImg : getCurrentMediaContent(),
     });
@@ -38,7 +34,6 @@ const MainScreenSettings = () => {
   const handleResetImg = () => {
     setMediaContentImg('');
     socketRef.current?.emit("mainScreenUpdate", {
-      theme,
       mediaType: activeMediaType,
       mediaContent: activeMediaType === 'img' ? '' : getCurrentMediaContent(),
     });
@@ -46,7 +41,6 @@ const MainScreenSettings = () => {
 
   const handleSetVideo = () => {
     socketRef.current?.emit("mainScreenUpdate", {
-      theme,
       mediaType: activeMediaType,
       mediaContent: activeMediaType === 'video' ? mediaContentVideo : getCurrentMediaContent(),
     });
@@ -55,7 +49,6 @@ const MainScreenSettings = () => {
   const handleResetVideo = () => {
     setMediaContentVideo('');
     socketRef.current?.emit("mainScreenUpdate", {
-      theme,
       mediaType: activeMediaType,
       mediaContent: activeMediaType === 'video' ? '' : getCurrentMediaContent(),
     });
@@ -63,7 +56,6 @@ const MainScreenSettings = () => {
 
   const handleSetTexte = () => {
     socketRef.current?.emit("mainScreenUpdate", {
-      theme,
       mediaType: activeMediaType,
       mediaContent: activeMediaType === 'texte' ? mediaContentTexte : getCurrentMediaContent(),
     });
@@ -72,7 +64,6 @@ const MainScreenSettings = () => {
   const handleResetTexte = () => {
     setMediaContentTexte('');
     socketRef.current?.emit("mainScreenUpdate", {
-      theme,
       mediaType: activeMediaType,
       mediaContent: activeMediaType === 'texte' ? '' : getCurrentMediaContent(),
     });
@@ -87,7 +78,6 @@ const MainScreenSettings = () => {
 
   const handleSave = () => {
     const data = {
-      theme,
       mediaType: activeMediaType,
       mediaContent: getCurrentMediaContent(),
     };
@@ -98,16 +88,6 @@ const MainScreenSettings = () => {
   return (
     <div className="card main-screen-settings">
       <h2>Ecran Principal</h2>
-
-      <div className="theme-selection">
-        <p>SElectionnez le thème :</p>
-        <select value={theme} onChange={(e) => setTheme(e.target.value)}>
-          <option value="Ecran principal">Ecran Principal</option>
-          <option value="chrono">Chrono</option>
-          <option value="texte">Texte</option>
-          <option value="Ecran secondaire">Ecran Secondaire</option>
-        </select>
-      </div>
 
       <div className="media-type-selection">
         <p>SElectionnez le type de mEdia à afficher :</p>

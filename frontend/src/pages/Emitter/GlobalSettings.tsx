@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useTimer } from "../../context/TimerContext";
 
 const GlobalSettings = () => {
-  const { time, start, pause, reset, updateTime, isRunning, mode, setMode } =
+  const { time, start, pause, reset, updateTime, isRunning, mode } =
     useTimer();
 
   const [chronoSet, setChronoSet] = useState<number>(() => {

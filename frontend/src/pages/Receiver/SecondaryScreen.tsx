@@ -1,13 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 import TimerDisplay from '../../components/TimerDisplay';
 import logo from '../../assets/logo.png';
 
 const SecondaryScreen = () => {
-  const [theme, setTheme] = useState(
-    localStorage.getItem('secondaryScreenTheme') || 'Ecran secondaire'
-  );
-
   const [mediaType, setMediaType] = useState<'img' | 'video' | 'texte'>(
     (localStorage.getItem('secondaryScreenMediaTypeActive') as 'img' | 'video' | 'texte') || 'img'
   );
@@ -36,7 +32,6 @@ const SecondaryScreen = () => {
     socketRef.current = io("http://localhost:5000");
 
     socketRef.current.on("secondaryScreenUpdate", (data) => {
-      setTheme(data.theme);
       setMediaType(data.mediaType);
       if (data.mediaType === 'img') {
         setMediaContentImg(data.mediaContent);

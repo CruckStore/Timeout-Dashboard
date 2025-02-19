@@ -1,4 +1,3 @@
-import React from "react";
 import { useChronometer } from "../context/ChronometerContext";
 import { formatTime } from "../utils/timeUtils";
 

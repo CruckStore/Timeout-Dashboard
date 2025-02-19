@@ -1,4 +1,3 @@
-import React from 'react';
 import GlobalSettings from './GlobalSettings';
 import MainScreenSettings from './MainScreenSettings';
 import SecondaryScreenSettings from './SecondaryScreenSettings';
