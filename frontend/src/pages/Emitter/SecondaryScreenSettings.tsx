@@ -11,20 +11,36 @@ const SecondaryScreenSettings = () => {
     };
   }, []);
 
-
   const [activeMediaType, setActiveMediaType] = useState<'img' | 'video' | 'texte'>(() => {
     const stored = localStorage.getItem('secondaryScreenMediaTypeActive');
     return stored === 'video' || stored === 'texte' ? stored : 'img';
   });
 
-  const [mediaContentImg, setMediaContentImg] = useState(() => localStorage.getItem('secondaryScreenMediaContentImg') || '');
-  const [mediaContentVideo, setMediaContentVideo] = useState(() => localStorage.getItem('secondaryScreenMediaContentVideo') || '');
-  const [mediaContentTexte, setMediaContentTexte] = useState(() => localStorage.getItem('secondaryScreenMediaContentTexte') || '');
+  const [mediaContentImg, setMediaContentImg] = useState(() =>
+    localStorage.getItem('secondaryScreenMediaContentImg') || ''
+  );
+  const [mediaContentVideo, setMediaContentVideo] = useState(() =>
+    localStorage.getItem('secondaryScreenMediaContentVideo') || ''
+  );
+  const [mediaContentTexte, setMediaContentTexte] = useState(() =>
+    localStorage.getItem('secondaryScreenMediaContentTexte') || ''
+  );
 
-  useEffect(() => { localStorage.setItem('secondaryScreenMediaTypeActive', activeMediaType); }, [activeMediaType]);
-  useEffect(() => { localStorage.setItem('secondaryScreenMediaContentImg', mediaContentImg); }, [mediaContentImg]);
-  useEffect(() => { localStorage.setItem('secondaryScreenMediaContentVideo', mediaContentVideo); }, [mediaContentVideo]);
-  useEffect(() => { localStorage.setItem('secondaryScreenMediaContentTexte', mediaContentTexte); }, [mediaContentTexte]);
+  useEffect(() => {
+    localStorage.setItem('secondaryScreenMediaTypeActive', activeMediaType);
+  }, [activeMediaType]);
+
+  useEffect(() => {
+    localStorage.setItem('secondaryScreenMediaContentImg', mediaContentImg);
+  }, [mediaContentImg]);
+
+  useEffect(() => {
+    localStorage.setItem('secondaryScreenMediaContentVideo', mediaContentVideo);
+  }, [mediaContentVideo]);
+
+  useEffect(() => {
+    localStorage.setItem('secondaryScreenMediaContentTexte', mediaContentTexte);
+  }, [mediaContentTexte]);
 
   const getCurrentMediaContent = () => {
     if (activeMediaType === 'img') return mediaContentImg;
@@ -36,7 +52,7 @@ const SecondaryScreenSettings = () => {
   const handleSetImg = () => {
     socketRef.current?.emit("secondaryScreenUpdate", {
       mediaType: activeMediaType,
-      mediaContent: (activeMediaType === 'img') ? mediaContentImg : getCurrentMediaContent(),
+      mediaContent: activeMediaType === 'img' ? mediaContentImg : getCurrentMediaContent(),
     });
   };
 
@@ -44,14 +60,14 @@ const SecondaryScreenSettings = () => {
     setMediaContentImg('');
     socketRef.current?.emit("secondaryScreenUpdate", {
       mediaType: activeMediaType,
-      mediaContent: (activeMediaType === 'img') ? '' : getCurrentMediaContent(),
+      mediaContent: activeMediaType === 'img' ? '' : getCurrentMediaContent(),
     });
   };
 
   const handleSetVideo = () => {
     socketRef.current?.emit("secondaryScreenUpdate", {
       mediaType: activeMediaType,
-      mediaContent: (activeMediaType === 'video') ? mediaContentVideo : getCurrentMediaContent(),
+      mediaContent: activeMediaType === 'video' ? mediaContentVideo : getCurrentMediaContent(),
     });
   };
 
@@ -59,14 +75,14 @@ const SecondaryScreenSettings = () => {
     setMediaContentVideo('');
     socketRef.current?.emit("secondaryScreenUpdate", {
       mediaType: activeMediaType,
-      mediaContent: (activeMediaType === 'video') ? '' : getCurrentMediaContent(),
+      mediaContent: activeMediaType === 'video' ? '' : getCurrentMediaContent(),
     });
   };
 
   const handleSetTexte = () => {
     socketRef.current?.emit("secondaryScreenUpdate", {
       mediaType: activeMediaType,
-      mediaContent: (activeMediaType === 'texte') ? mediaContentTexte : getCurrentMediaContent(),
+      mediaContent: activeMediaType === 'texte' ? mediaContentTexte : getCurrentMediaContent(),
     });
   };
 
@@ -74,7 +90,7 @@ const SecondaryScreenSettings = () => {
     setMediaContentTexte('');
     socketRef.current?.emit("secondaryScreenUpdate", {
       mediaType: activeMediaType,
-      mediaContent: (activeMediaType === 'texte') ? '' : getCurrentMediaContent(),
+      mediaContent: activeMediaType === 'texte' ? '' : getCurrentMediaContent(),
     });
   };
 
@@ -84,7 +100,7 @@ const SecondaryScreenSettings = () => {
       mediaContent: getCurrentMediaContent(),
     };
     socketRef.current?.emit("secondaryScreenUpdate", data);
-    alert("Modifications enregistrEes pour l'Ecran Secondaire");
+    alert("Modifications enregistrées pour l'Écran Secondaire");
   };
 
   return (
@@ -92,7 +108,7 @@ const SecondaryScreenSettings = () => {
       <h2>Ecran Secondaire</h2>
 
       <div className="media-type-selection">
-        <p>SElectionnez le type de mEdia à afficher :</p>
+        <p>Sélectionnez le type de média à afficher :</p>
         <label>
           <input
             type="radio"
@@ -109,7 +125,7 @@ const SecondaryScreenSettings = () => {
             checked={activeMediaType === 'video'}
             onChange={() => setActiveMediaType('video')}
           />
-          VidEo
+          Vidéo
         </label>
         <label>
           <input
@@ -123,7 +139,7 @@ const SecondaryScreenSettings = () => {
       </div>
 
       <div className="media-settings">
-        <p>Configurer les mEdias :</p>
+        <p>Configurer les médias :</p>
 
         <div className="media-config">
           <label>Image URL :</label>
@@ -138,10 +154,10 @@ const SecondaryScreenSettings = () => {
         </div>
 
         <div className="media-config">
-          <label>VidEo URL :</label>
+          <label>Vidéo URL :</label>
           <input
             type="text"
-            placeholder="Entrez l'URL de la vidEo"
+            placeholder="Entrez l'URL de la vidéo"
             value={mediaContentVideo}
             onChange={(e) => setMediaContentVideo(e.target.value)}
           />

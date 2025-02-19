@@ -3,6 +3,7 @@ import { io, Socket } from 'socket.io-client';
 
 const MainScreenSettings = () => {
   const socketRef = useRef<Socket | null>(null);
+
   useEffect(() => {
     socketRef.current = io("http://localhost:5000");
     return () => {
@@ -15,14 +16,38 @@ const MainScreenSettings = () => {
     return stored === 'video' || stored === 'texte' ? stored : 'img';
   });
 
-  const [mediaContentImg, setMediaContentImg] = useState(() => localStorage.getItem('mainScreenMediaContentImg') || '');
-  const [mediaContentVideo, setMediaContentVideo] = useState(() => localStorage.getItem('mainScreenMediaContentVideo') || '');
-  const [mediaContentTexte, setMediaContentTexte] = useState(() => localStorage.getItem('mainScreenMediaContentTexte') || '');
+  const [mediaContentImg, setMediaContentImg] = useState(() =>
+    localStorage.getItem('mainScreenMediaContentImg') || ''
+  );
+  const [mediaContentVideo, setMediaContentVideo] = useState(() =>
+    localStorage.getItem('mainScreenMediaContentVideo') || ''
+  );
+  const [mediaContentTexte, setMediaContentTexte] = useState(() =>
+    localStorage.getItem('mainScreenMediaContentTexte') || ''
+  );
 
-  useEffect(() => { localStorage.setItem('mainScreenMediaTypeActive', activeMediaType); }, [activeMediaType]);
-  useEffect(() => { localStorage.setItem('mainScreenMediaContentImg', mediaContentImg); }, [mediaContentImg]);
-  useEffect(() => { localStorage.setItem('mainScreenMediaContentVideo', mediaContentVideo); }, [mediaContentVideo]);
-  useEffect(() => { localStorage.setItem('mainScreenMediaContentTexte', mediaContentTexte); }, [mediaContentTexte]);
+  useEffect(() => {
+    localStorage.setItem('mainScreenMediaTypeActive', activeMediaType);
+  }, [activeMediaType]);
+
+  useEffect(() => {
+    localStorage.setItem('mainScreenMediaContentImg', mediaContentImg);
+  }, [mediaContentImg]);
+
+  useEffect(() => {
+    localStorage.setItem('mainScreenMediaContentVideo', mediaContentVideo);
+  }, [mediaContentVideo]);
+
+  useEffect(() => {
+    localStorage.setItem('mainScreenMediaContentTexte', mediaContentTexte);
+  }, [mediaContentTexte]);
+
+  const getCurrentMediaContent = () => {
+    if (activeMediaType === 'img') return mediaContentImg;
+    if (activeMediaType === 'video') return mediaContentVideo;
+    if (activeMediaType === 'texte') return mediaContentTexte;
+    return '';
+  };
 
   const handleSetImg = () => {
     socketRef.current?.emit("mainScreenUpdate", {
@@ -67,13 +92,6 @@ const MainScreenSettings = () => {
       mediaType: activeMediaType,
       mediaContent: activeMediaType === 'texte' ? '' : getCurrentMediaContent(),
     });
-  };
-
-  const getCurrentMediaContent = () => {
-    if (activeMediaType === 'img') return mediaContentImg;
-    if (activeMediaType === 'video') return mediaContentVideo;
-    if (activeMediaType === 'texte') return mediaContentTexte;
-    return '';
   };
 
   const handleSave = () => {

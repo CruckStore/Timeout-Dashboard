@@ -7,9 +7,15 @@ const MainScreen = () => {
   const [mediaType, setMediaType] = useState<'img' | 'video' | 'texte'>(
     (localStorage.getItem('mainScreenMediaType') as 'img' | 'video' | 'texte') || 'img'
   );
-  const [mediaContentImg, setMediaContentImg] = useState(localStorage.getItem('mainScreenMediaContentImg') || '');
-  const [mediaContentVideo, setMediaContentVideo] = useState(localStorage.getItem('mainScreenMediaContentVideo') || '');
-  const [mediaContentTexte, setMediaContentTexte] = useState(localStorage.getItem('mainScreenMediaContentTexte') || '');
+  const [mediaContentImg, setMediaContentImg] = useState(
+    localStorage.getItem('mainScreenMediaContentImg') || ''
+  );
+  const [mediaContentVideo, setMediaContentVideo] = useState(
+    localStorage.getItem('mainScreenMediaContentVideo') || ''
+  );
+  const [mediaContentTexte, setMediaContentTexte] = useState(
+    localStorage.getItem('mainScreenMediaContentTexte') || ''
+  );
 
   const mediaContent = mediaType === 'img'
     ? mediaContentImg
@@ -18,6 +24,7 @@ const MainScreen = () => {
       : mediaContentTexte;
 
   const socketRef = useRef<Socket | null>(null);
+
   useEffect(() => {
     socketRef.current = io("http://localhost:5000");
     socketRef.current.on("mainScreenUpdate", (data) => {
@@ -56,6 +63,7 @@ const MainScreen = () => {
           }}
         />
       )}
+
       {mediaType === 'video' && mediaContent && (
         (() => {
           const embedUrl = getYoutubeEmbedUrl(mediaContent);
@@ -64,7 +72,6 @@ const MainScreen = () => {
               <iframe
                 src={embedUrl}
                 title="Background Video"
-                frameBorder="0"
                 allow="autoplay; muted; loop"
                 style={{
                   position: 'absolute',
@@ -97,6 +104,7 @@ const MainScreen = () => {
           }
         })()
       )}
+
       <img
         src={logo}
         alt="Logo"
@@ -104,8 +112,8 @@ const MainScreen = () => {
         style={{ position: 'relative', zIndex: 1 }}
       />
       <div className="timer" style={{ position: 'relative', zIndex: 1 }}>
-        {(mediaType === 'texte' && mediaContent) ? (
-          <p className='textemediamain'>{mediaContent}</p>
+        {mediaType === 'texte' && mediaContent ? (
+          <p className="textemediamain">{mediaContent}</p>
         ) : (
           <TimerDisplay />
         )}

@@ -1,3 +1,4 @@
+// server/index.js (ou app.js)
 const express = require('express');
 const http = require('http');
 const cors = require('cors');
@@ -9,10 +10,9 @@ const server = http.createServer(app);
 app.use(cors());
 app.use(express.json());
 
-// Routes
+// Exemple d'utilisation de routes d'authentification ou de timer si nécessaire
 const authRoutes = require('./routes/auth');
 const timerRoutes = require('./routes/timer');
-
 app.use('/api/auth', authRoutes);
 app.use('/api/timer', timerRoutes);
 
@@ -30,6 +30,7 @@ let timerState = {
 io.on('connection', (socket) => {
   console.log('Nouvelle connexion:', socket.id);
 
+  // Lorsqu'un client se connecte, on lui envoie l'état actuel du timer
   socket.emit('timerUpdate', timerState);
 
   socket.on('updateTimer', (data) => {
@@ -58,5 +59,5 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
-  console.log(`Serveur en listening on the port megaport incredible woaw --> (english les mecs learner) sur le port ${PORT}`);
+  console.log(`Serveur en écoute sur le port ${PORT}`);
 });

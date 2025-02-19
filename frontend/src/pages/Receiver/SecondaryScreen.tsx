@@ -22,9 +22,7 @@ const SecondaryScreen = () => {
     ? mediaContentImg
     : mediaType === 'video'
       ? mediaContentVideo
-      : mediaType === 'texte'
-        ? mediaContentTexte
-        : '';
+      : mediaContentTexte;
 
   const socketRef = useRef<Socket | null>(null);
 
@@ -81,7 +79,6 @@ const SecondaryScreen = () => {
               <iframe
                 src={embedUrl}
                 title="Background Video"
-                frameBorder="0"
                 allow="autoplay; muted; loop"
                 style={{
                   position: 'absolute',
@@ -115,13 +112,18 @@ const SecondaryScreen = () => {
         })()
       )}
 
-      <div className="logo-container" style={{ position: 'absolute', bottom: '20px', width: '100%', textAlign: 'center', zIndex: 1 }}>
+      <div
+        className="logo-container"
+        style={{ position: 'absolute', bottom: '20px', width: '100%', textAlign: 'center', zIndex: 1 }}
+      >
         <img src={logo} alt="Logo" className="logo" />
       </div>
 
-      <div className="timer" style={{ position: 'relative', zIndex: 1, textAlign: 'center'}}>
-        {(mediaType === 'texte' && mediaContent) ? (
-          <p className='textemediasecondary' style={{ color: '#fff' }}>{mediaContent}</p>
+      <div className="timer" style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
+        {mediaType === 'texte' && mediaContent ? (
+          <p className="textemediasecondary" style={{ color: '#fff' }}>
+            {mediaContent}
+          </p>
         ) : (
           <TimerDisplay />
         )}
