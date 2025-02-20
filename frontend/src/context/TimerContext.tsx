@@ -1,4 +1,3 @@
-// src/context/TimerContext.tsx
 import React, {
   createContext,
   useContext,
@@ -33,7 +32,6 @@ const TimerContext = createContext<TimerContextProps>({
 });
 
 export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
-  // États distincts pour le chrono et le timer
   const [chronoTime, setChronoTime] = useState<number>(0);
   const [timerTime, setTimerTime] = useState<number>(0);
   const [isRunning, setIsRunning] = useState<boolean>(false);
@@ -42,7 +40,6 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
     return stored === "chrono" ? "chrono" : "timer";
   });
 
-  // La valeur affichée dépend du mode actif
   const time = mode === "chrono" ? chronoTime : timerTime;
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -55,7 +52,6 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
   }, [mode]);
 
   useEffect(() => {
-    // Connexion Socket.IO
     const socket = io("http://localhost:5000");
     socketRef.current = socket;
     socket.on("timerUpdate", (data: { time: number; isRunning: boolean }) => {
@@ -103,7 +99,6 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
 
   const start = () => {
     if (isRunning) return;
-    // Pour le mode timer, on vérifie qu'une valeur positive est définie
     if (modeRef.current === "timer" && timerTime <= 0) {
       alert("Veuillez définir une valeur positive pour le compte à rebours.");
       return;

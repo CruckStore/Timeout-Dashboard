@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useTimer } from "../../context/TimerContext";
-import { useChronometer } from "../../context/ChronometerContext";
 
 const TimerSettings = () => {
   const { time, start, pause, reset, updateTime, isRunning } = useTimer();

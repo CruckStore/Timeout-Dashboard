@@ -1,5 +1,4 @@
-// src/pages/Receiver/MainScreen.tsx
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 import TimerDisplay from "../../components/TimerDisplay";
 import ChronometerDisplay from "../../components/ChronometerDisplay";
@@ -80,7 +79,6 @@ const MainScreen = () => {
               <iframe
                 src={embedUrl}
                 title="Background Video"
-                frameBorder="0"
                 allow="autoplay; muted; loop"
                 style={{
                   position: 'absolute',
