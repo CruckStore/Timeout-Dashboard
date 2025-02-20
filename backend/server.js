@@ -35,6 +35,83 @@ app.get("/socket-logs", (req, res) => {
   res.json(socketLogs);
 });
 
+app.get("/stop", (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <title>Stop? Vraiment?</title>
+        <style>
+          body {
+            background-color: #ffebee;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            padding: 50px;
+            color: #c62828;
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+          }
+          h1 { font-size: 3em; }
+          p { font-size: 1.2em; }
+          a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #c62828;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+          }
+          a:hover { background-color: #8e0000; }
+          #runawayBtn {
+            position: absolute;
+            top: 70%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 10px 20px;
+            background-color: #c62828;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+          }
+          #runawayBtn:hover {
+            background-color: #8e0000;
+          }
+        </style>
+      </head>
+      <body>
+        <h1>Pourquoi voulez-vous tout arrêter ?</h1>
+        <p>C'est pas cool de vouloir stopper la magie de l'API (sale batard va) !</p>
+        <p>Regarde plutôt notre super chaîne YouTube :</p>
+        <a href="https://www.youtube.com/@timeoutlive" target="_blank">TimeoutLive</a>
+        <br><br>
+        <button id="runawayBtn" onclick="alert('Impossible de cliquer, le bouton s\'enfuit !')">Supprimer</button>
+        <script>
+          const btn = document.getElementById("runawayBtn");
+          document.body.addEventListener("mousemove", (e) => {
+            const rect = btn.getBoundingClientRect();
+            const btnX = rect.left + rect.width / 2;
+            const btnY = rect.top + rect.height / 2;
+            const dist = Math.hypot(e.clientX - btnX, e.clientY - btnY);
+            if(dist < 80) {
+              const newLeft = Math.random() * (window.innerWidth - rect.width);
+              const newTop = Math.random() * (window.innerHeight - rect.height);
+              btn.style.left = newLeft + "px";
+              btn.style.top = newTop + "px";
+            }
+          });
+        </script>
+      </body>
+    </html>
+  `);
+});
+
 app.get("/", (req, res) => {
   res.send(`
     <!DOCTYPE html>
