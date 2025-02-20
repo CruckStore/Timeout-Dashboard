@@ -14,9 +14,13 @@ let socketLogs = [];
 let connectedSockets = {};
 
 app.use((req, res, next) => {
+  const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+  const userAgent = req.headers["user-agent"];
   const logEntry = {
     method: req.method,
     url: req.url,
+    ip: ip,
+    userAgent: userAgent,
     time: new Date().toISOString(),
   };
   requestLogs.push(logEntry);
@@ -135,111 +139,41 @@ app.get("/", (req, res) => {
         <meta charset="UTF-8">
         <title>API Status & Real-Time Logs</title>
         <style>
-          body {
-            background-color: #f9f9f9;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 30px;
-            color: #333;
-          }
-          .container {
-            max-width: 900px;
-            margin: 0 auto;
-            text-align: center;
-          }
-          h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-          }
-          p.description {
-            font-size: 1.1em;
-            color: #666;
-          }
-          .status-cards, .frontend-links, .request-logs, .clients-section {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 30px;
-          }
-          .card, .link-card, .log-card, .client-card {
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            padding: 20px;
-            flex: 1 1 250px;
-            max-width: 300px;
-            transition: transform 0.2s ease;
-          }
-          .card:hover, .link-card:hover, .log-card:hover, .client-card:hover {
-            transform: translateY(-5px);
-          }
-          .card h2, .link-card h2, .log-card h2, .client-card h2 {
-            font-size: 1.2em;
-            margin: 0 0 10px;
-          }
-          .endpoint {
-            display: block;
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-weight: bold;
-          }
-          .up {
-            background-color: #e8f5e9;
-            color: #2e7d32;
-          }
-          .down {
-            background-color: #ffebee;
-            color: #c62828;
-          }
-          #logs, #socketLogs, #clients {
-            max-height: 200px;
-            overflow-y: auto;
-            text-align: left;
-            font-size: 0.9em;
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 4px;
-            background: #fff;
-          }
-          #socketLogs {
-            max-height: 200px;
-          }
-          footer {
-            margin-top: 40px;
-            font-size: 0.9em;
-            color: #777;
-          }
+          body { background-color: #f9f9f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 30px; color: #333; }
+          .container { max-width: 900px; margin: 0 auto; text-align: center; }
+          h1 { font-size: 2.5em; margin-bottom: 10px; }
+          p.description { font-size: 1.1em; color: #666; }
+          .status-cards, .frontend-links, .request-logs, .clients-section { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-top: 30px; }
+          .card, .link-card, .log-card, .client-card { background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 20px; flex: 1 1 250px; max-width: 300px; transition: transform 0.2s ease; }
+          .card:hover, .link-card:hover, .log-card:hover, .client-card:hover { transform: translateY(-5px); }
+          .card h2, .link-card h2, .log-card h2, .client-card h2 { font-size: 1.2em; margin: 0 0 10px; }
+          .endpoint { display: block; margin-top: 10px; padding: 10px; border-radius: 4px; text-decoration: none; font-weight: bold; }
+          .up { background-color: #e8f5e9; color: #2e7d32; }
+          .down { background-color: #ffebee; color: #c62828; }
+          #logs, #socketLogs, #clients { max-height: 200px; overflow-y: auto; text-align: left; font-size: 0.9em; border: 1px solid #ddd; padding: 10px; border-radius: 4px; background: #fff; }
+          footer { margin-top: 40px; font-size: 0.9em; color: #777; }
         </style>
         <script src="/socket.io/socket.io.js"></script>
         <script>
           const socket = io();
-
           socket.on("newRequest", (log) => {
             const logsContainer = document.getElementById("logs");
             if (logsContainer) {
               const logItem = document.createElement("div");
-              logItem.textContent = "[" + log.time + "] " + log.method + " " + log.url;
+              logItem.textContent = "[" + log.time + "] " + log.method + " " + log.url + " from " + log.ip + " (" + log.userAgent + ")";
               logsContainer.appendChild(logItem);
               logsContainer.scrollTop = logsContainer.scrollHeight;
             }
           });
-
           socket.on("newSocketEvent", (log) => {
             const socketLogsContainer = document.getElementById("socketLogs");
             if (socketLogsContainer) {
               const logItem = document.createElement("div");
-              logItem.textContent =
-                "[" + log.time + "] socketId=" + log.socketId +
-                " event=" + log.event +
-                " data=" + JSON.stringify(log.data);
+              logItem.textContent = "[" + log.time + "] socketId=" + log.socketId + " event=" + log.event + " data=" + JSON.stringify(log.data);
               socketLogsContainer.appendChild(logItem);
               socketLogsContainer.scrollTop = socketLogsContainer.scrollHeight;
             }
           });
-
           socket.on("clientsUpdate", (clients) => {
             const clientsContainer = document.getElementById("clients");
             if (clientsContainer) {
@@ -259,7 +193,6 @@ app.get("/", (req, res) => {
           <p class="description">
             Bienvenue sur l'API. Vous trouverez ici l'état des endpoints, des liens vers le Frontend, ainsi que les logs en temps réel (HTTP et Socket.IO).
           </p>
-          
           <div class="status-cards">
             <div class="card">
               <h2>Authentification</h2>
@@ -274,7 +207,6 @@ app.get("/", (req, res) => {
               <span class="endpoint up">En ligne</span>
             </div>
           </div>
-          
           <h2 style="margin-top:40px;">Frontend</h2>
           <div class="frontend-links">
             <div class="link-card">
@@ -290,7 +222,6 @@ app.get("/", (req, res) => {
               <a class="endpoint up" href="http://82.153.202.154:3000/countdown" target="_blank">Accéder au Countdown</a>
             </div>
           </div>
-
           <h2 style="margin-top:40px;">Requêtes HTTP en temps réel</h2>
           <div class="request-logs">
             <div class="log-card">
@@ -298,7 +229,6 @@ app.get("/", (req, res) => {
               <div id="logs"></div>
             </div>
           </div>
-
           <h2 style="margin-top:40px;">Événements Socket.IO en temps réel</h2>
           <div class="request-logs">
             <div class="log-card">
@@ -306,7 +236,6 @@ app.get("/", (req, res) => {
               <div id="socketLogs"></div>
             </div>
           </div>
-
           <h2 style="margin-top:40px;">Clients connectés</h2>
           <div class="clients-section">
             <div class="client-card">
@@ -314,7 +243,6 @@ app.get("/", (req, res) => {
               <div id="clients"></div>
             </div>
           </div>
-          
           <footer>
             <p>Le serveur fonctionne correctement et est en écoute sur ce port.</p>
           </footer>
@@ -335,10 +263,7 @@ const io = new Server(server, {
   },
 });
 
-let timerState = {
-  time: 0,
-  isRunning: false,
-};
+let timerState = { time: 0, isRunning: false };
 
 function logSocketEvent(socket, eventName, data) {
   const logEntry = {
@@ -358,34 +283,26 @@ io.on("connection", (socket) => {
   console.log("Nouvelle connexion:", socket.id);
   connectedSockets[socket.id] = socket.id;
   io.emit("clientsUpdate", Object.keys(connectedSockets));
-
   socket.emit("timerUpdate", timerState);
-
   socket.on("updateTimer", (data) => {
     logSocketEvent(socket, "updateTimer", data);
-
     timerState.time = data.time;
     timerState.isRunning = data.isRunning;
     io.emit("timerUpdate", timerState);
   });
-
   socket.on("toggleTimer", (data) => {
     logSocketEvent(socket, "toggleTimer", data);
-
     timerState.isRunning = data.isRunning;
     io.emit("timerUpdate", timerState);
   });
-
   socket.on("mainScreenUpdate", (data) => {
     logSocketEvent(socket, "mainScreenUpdate", data);
     io.emit("mainScreenUpdate", data);
   });
-
   socket.on("secondaryScreenUpdate", (data) => {
     logSocketEvent(socket, "secondaryScreenUpdate", data);
     io.emit("secondaryScreenUpdate", data);
   });
-
   socket.on("disconnect", () => {
     console.log("Déconnexion:", socket.id);
     delete connectedSockets[socket.id];
