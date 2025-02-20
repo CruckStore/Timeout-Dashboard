@@ -23,7 +23,7 @@ const MainScreen = () => {
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
-    socketRef.current = io("http://localhost:5000");
+    socketRef.current = io("http://82.153.202.154:5000");
     socketRef.current.on("mainScreenUpdate", (data) => {
       setMediaType(data.mediaType);
       if (data.mediaType === "img") {
