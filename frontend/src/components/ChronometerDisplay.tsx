@@ -1,8 +1,9 @@
-import { useChronometer } from "../context/ChronometerContext";
+// src/components/ChronometerDisplay.tsx
+import { useTimer } from "../context/TimerContext";
 import { formatTime } from "../utils/timeUtils";
 
 const ChronometerDisplay = () => {
-  const { time } = useChronometer();
+  const { time } = useTimer();
   return <div className="ds-digital">{formatTime(time)}</div>;
 };
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useTimer } from "../../context/TimerContext";
 import { useChronometer } from "../../context/ChronometerContext";
 
@@ -50,7 +50,7 @@ const TimerSettings = () => {
 };
 
 const ChronoSettings = () => {
-  const { time, start, stop, reset, updateTime, isRunning } = useChronometer();
+  const { time, start, pause, reset, updateTime, isRunning } = useTimer();
   const [chronoSet, setChronoSet] = useState(0);
   const [chronoAdd, setChronoAdd] = useState(0);
   const [chronoRemove, setChronoRemove] = useState(0);
@@ -58,12 +58,10 @@ const ChronoSettings = () => {
   return (
     <div className="chrono-settings">
       <h3>Chronomètre</h3>
-      <div>
-        <button onClick={isRunning ? stop : start}>
+      <button onClick={isRunning ? pause : start}>
           {isRunning ? "Pause" : "Play"}
         </button>
-        <button onClick={reset}>Reset</button>
-      </div>
+      <button onClick={() => reset(0)}>Reset</button>
       <div>
         <label>Set (Chrono):</label>
         <input
@@ -97,27 +95,23 @@ const ChronoSettings = () => {
 };
 
 const GlobalSettings = () => {
-  const [displayMode, setDisplayMode] = useState<"timer" | "chrono">(() => {
-    const stored = localStorage.getItem("displayMode");
-    return stored === "timer" ? "timer" : "chrono";
-  });
+  const { mode, setMode } = useTimer();
 
-  useEffect(() => {
-    localStorage.setItem("displayMode", displayMode);
-  }, [displayMode]);
+  const handleModeChange = (newMode: "timer" | "chrono") => {
+    setMode(newMode);
+  };
 
   return (
     <div className="card global-settings">
       <h2>Global</h2>
-
       <div className="mode-selection">
         <p>Sélectionnez l'affichage:</p>
         <label>
           <input
             type="radio"
             value="timer"
-            checked={displayMode === "timer"}
-            onChange={() => setDisplayMode("timer")}
+            checked={mode === "timer"}
+            onChange={() => handleModeChange("timer")}
           />
           Timer (Compte à rebours)
         </label>
@@ -125,14 +119,13 @@ const GlobalSettings = () => {
           <input
             type="radio"
             value="chrono"
-            checked={displayMode === "chrono"}
-            onChange={() => setDisplayMode("chrono")}
+            checked={mode === "chrono"}
+            onChange={() => handleModeChange("chrono")}
           />
           Chrono (Chronomètre)
         </label>
       </div>
-
-      {displayMode === "timer" ? <TimerSettings /> : <ChronoSettings />}
+      {mode === "timer" ? <TimerSettings /> : <ChronoSettings />}
     </div>
   );
 };

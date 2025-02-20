@@ -1,3 +1,4 @@
+// src/context/TimerContext.tsx
 import React, {
   createContext,
   useContext,
@@ -32,14 +33,16 @@ const TimerContext = createContext<TimerContextProps>({
 });
 
 export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
+  // États distincts pour le chrono et le timer
   const [chronoTime, setChronoTime] = useState<number>(0);
   const [timerTime, setTimerTime] = useState<number>(0);
   const [isRunning, setIsRunning] = useState<boolean>(false);
-  const [mode, setMode] = useState<TimerMode>(() => {
+  const [mode, setModeState] = useState<TimerMode>(() => {
     const stored = localStorage.getItem("globalMode");
     return stored === "chrono" ? "chrono" : "timer";
   });
 
+  // La valeur affichée dépend du mode actif
   const time = mode === "chrono" ? chronoTime : timerTime;
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -52,9 +55,9 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
   }, [mode]);
 
   useEffect(() => {
-    const socket = io("http://82.153.202.154:5000");
+    // Connexion Socket.IO
+    const socket = io("http://localhost:5000");
     socketRef.current = socket;
-
     socket.on("timerUpdate", (data: { time: number; isRunning: boolean }) => {
       if (modeRef.current === "chrono") {
         setChronoTime(data.time);
@@ -63,7 +66,6 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
       }
       setIsRunning(data.isRunning);
     });
-
     return () => {
       socket.disconnect();
     };
@@ -77,6 +79,7 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
           time: newTime,
           isRunning: true,
         });
+        console.log("Tick chrono :", newTime);
         return newTime;
       });
     } else {
@@ -85,12 +88,14 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
         if (newTime <= 0) {
           pause();
           socketRef.current?.emit("updateTimer", { time: 0, isRunning: false });
+          console.log("Timer terminé");
           return 0;
         }
         socketRef.current?.emit("updateTimer", {
           time: newTime,
           isRunning: true,
         });
+        console.log("Tick timer :", newTime);
         return newTime;
       });
     }
@@ -98,6 +103,7 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
 
   const start = () => {
     if (isRunning) return;
+    // Pour le mode timer, on vérifie qu'une valeur positive est définie
     if (modeRef.current === "timer" && timerTime <= 0) {
       alert("Veuillez définir une valeur positive pour le compte à rebours.");
       return;
@@ -105,6 +111,7 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
     setIsRunning(true);
     socketRef.current?.emit("toggleTimer", { isRunning: true });
     intervalRef.current = setInterval(tick, 1000);
+    console.log("start() appelé en mode", modeRef.current);
   };
 
   const pause = () => {
@@ -114,22 +121,17 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
       intervalRef.current = null;
     }
     socketRef.current?.emit("toggleTimer", { isRunning: false });
+    console.log("pause() appelé");
   };
 
   const reset = (newTime: number = 0) => {
     pause();
     if (modeRef.current === "chrono") {
       setChronoTime(newTime);
-      socketRef.current?.emit("updateTimer", {
-        time: newTime,
-        isRunning: false,
-      });
+      socketRef.current?.emit("updateTimer", { time: newTime, isRunning: false });
     } else {
       setTimerTime(newTime);
-      socketRef.current?.emit("updateTimer", {
-        time: newTime,
-        isRunning: false,
-      });
+      socketRef.current?.emit("updateTimer", { time: newTime, isRunning: false });
     }
   };
 
@@ -146,7 +148,7 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
   const changeMode = (newMode: TimerMode) => {
     if (isRunning) pause();
     modeRef.current = newMode;
-    setMode(newMode);
+    setModeState(newMode);
     const newTime = newMode === "chrono" ? chronoTime : timerTime;
     socketRef.current?.emit("updateTimer", { time: newTime, isRunning: false });
   };
