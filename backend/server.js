@@ -63,14 +63,22 @@ app.get("/stop", (req, res) => {
             50% { background: linear-gradient(45deg, #f8bbd0, #f48fb1); }
             100% { background: linear-gradient(45deg, #ffebee, #ffcdd2); }
           }
+          @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+          }
+          @keyframes shake {
+            0% { transform: translate(0, 0); }
+            20% { transform: translate(-5px, 0); }
+            40% { transform: translate(5px, 0); }
+            60% { transform: translate(-5px, 0); }
+            80% { transform: translate(5px, 0); }
+            100% { transform: translate(0, 0); }
+          }
           h1 { 
             font-size: 3em; 
             margin-bottom: 20px; 
             animation: bounce 2s infinite;
-          }
-          @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
           }
           p { font-size: 1.2em; margin-bottom: 20px; }
           a { 
@@ -103,11 +111,17 @@ app.get("/stop", (req, res) => {
             background-color: #8e0000;
             transform: translate(-50%, -50%) rotate(20deg);
           }
+          .funText {
+            font-size: 1.4em;
+            margin-top: 20px;
+            animation: shake 0.5s infinite;
+          }
         </style>
       </head>
       <body>
         <h1>Stop? Vraiment?</h1>
         <p>Tu veux arrêter la magie de l'API ?! Mais c'est pas cool, non ?</p>
+        <p class="funText">Non, non, non, on va pas te laisser faire ça !</p>
         <p>Regarde plutôt notre super chaîne YouTube :</p>
         <a href="https://www.youtube.com/@timeoutlive" target="_blank">TimeoutLive</a>
         <br><br>
@@ -120,7 +134,6 @@ app.get("/stop", (req, res) => {
             const btnY = rect.top + rect.height / 2;
             const dist = Math.hypot(e.clientX - btnX, e.clientY - btnY);
             if(dist < 80) {
-              // Générer un nombre aléatoire entre 100 et 10000
               const randomNumber = Math.floor(Math.random() * (10000 - 100 + 1)) + 100;
               const messages = [
                 "Aller hop -{n} aura",
@@ -139,9 +152,9 @@ app.get("/stop", (req, res) => {
               const msgEl = document.createElement("div");
               msgEl.textContent = finalMessage;
               msgEl.style.position = "fixed";
-              msgEl.style.top = "20%";
+              msgEl.style.top = "50%";
               msgEl.style.left = "50%";
-              msgEl.style.transform = "translateX(-50%)";
+              msgEl.style.transform = "translate(-50%, -50%)";
               msgEl.style.backgroundColor = "#fff";
               msgEl.style.padding = "10px 50px";
               msgEl.style.border = "2px solid #c62828";
