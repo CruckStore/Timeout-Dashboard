@@ -43,27 +43,27 @@ app.get("/stop", (req, res) => {
         <meta charset="UTF-8">
         <title>Stop? Vraiment?</title>
         <style>
-          body {
-            background-color: #ffebee;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center;
-            padding: 50px;
-            color: #c62828;
-            position: relative;
-            height: 100vh;
-            overflow: hidden;
+          body { 
+            background-color: #ffebee; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            text-align: center; 
+            padding: 50px; 
+            color: #c62828; 
+            position: relative; 
+            height: 100vh; 
+            overflow: hidden; 
           }
           h1 { font-size: 3em; }
           p { font-size: 1.2em; }
-          a {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #c62828;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 1.2em;
+          a { 
+            display: inline-block; 
+            margin-top: 20px; 
+            padding: 10px 20px; 
+            background-color: #c62828; 
+            color: #fff; 
+            text-decoration: none; 
+            border-radius: 5px; 
+            font-size: 1.2em; 
           }
           a:hover { background-color: #8e0000; }
           #runawayBtn {
@@ -78,20 +78,35 @@ app.get("/stop", (req, res) => {
             border-radius: 5px;
             font-size: 1.2em;
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            transition: background-color 0.2s ease, transform 0.2s ease;
           }
           #runawayBtn:hover {
             background-color: #8e0000;
+            transform: translate(-50%, -50%) rotate(20deg);
+          }
+          @keyframes shake {
+            0% { transform: translate(0, 0); }
+            20% { transform: translate(-5px, 0); }
+            40% { transform: translate(5px, 0); }
+            60% { transform: translate(-5px, 0); }
+            80% { transform: translate(5px, 0); }
+            100% { transform: translate(0, 0); }
+          }
+          .funText {
+            font-size: 1.4em;
+            margin-top: 20px;
+            animation: shake 0.5s infinite;
           }
         </style>
       </head>
       <body>
-        <h1>Pourquoi voulez-vous tout arrêter ?</h1>
-        <p>C'est pas cool de vouloir stopper la magie de l'API (sale batard va) !</p>
+        <h1>Stop? Vraiment?</h1>
+        <p>Tu veux arrêter la magie de l'API ?! Mais c'est pas cool, non ?</p>
+        <p class="funText">Non, non, non, on va pas te laisser faire ça !</p>
         <p>Regarde plutôt notre super chaîne YouTube :</p>
         <a href="https://www.youtube.com/@timeoutlive" target="_blank">TimeoutLive</a>
         <br><br>
-        <button id="runawayBtn" onclick="alert('Impossible de cliquer, le bouton s\'enfuit !')">Supprimer</button>
+        <button id="runawayBtn" onclick="alert('T\'as raté, le bouton s\'enfuit !')">Supprimer</button>
         <script>
           const btn = document.getElementById("runawayBtn");
           document.body.addEventListener("mousemove", (e) => {
