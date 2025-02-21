@@ -96,6 +96,7 @@ const MainScreen = () => {
                   width: "100%",
                   height: "100%",
                   zIndex: -1,
+                  scale: 1.2,
                 }}
               />
             );
