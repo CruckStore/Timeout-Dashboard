@@ -7,17 +7,20 @@ import { useTimer } from "../../context/TimerContext";
 
 const MainScreen = () => {
   const { mode } = useTimer();
-  const [mediaType, setMediaType] = useState<'img' | 'video' | 'texte'>(
-    (localStorage.getItem('mainScreenMediaType') as 'img' | 'video' | 'texte') || 'img'
+  const [mediaType, setMediaType] = useState<"img" | "video" | "texte">(
+    (localStorage.getItem("mainScreenMediaType") as
+      | "img"
+      | "video"
+      | "texte") || "img"
   );
   const [mediaContentImg, setMediaContentImg] = useState(
-    localStorage.getItem('mainScreenMediaContentImg') || ''
+    localStorage.getItem("mainScreenMediaContentImg") || ""
   );
   const [mediaContentVideo, setMediaContentVideo] = useState(
-    localStorage.getItem('mainScreenMediaContentVideo') || ''
+    localStorage.getItem("mainScreenMediaContentVideo") || ""
   );
   const [mediaContentTexte, setMediaContentTexte] = useState(
-    localStorage.getItem('mainScreenMediaContentTexte') || ''
+    localStorage.getItem("mainScreenMediaContentTexte") || ""
   );
 
   const socketRef = useRef<Socket | null>(null);
@@ -40,38 +43,43 @@ const MainScreen = () => {
   }, []);
 
   const getYoutubeEmbedUrl = (url: string): string | null => {
-    const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/;
+    const regex =
+      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/;
     const match = url.match(regex);
     return match
-      ? `https://www.youtube.com/embed/${match[1]}?autoplay=1&mute=1&controls=0&loop=1&playlist=${match[1]}`
+      ? `https://www.youtube.com/embed/${match[1]}?autoplay=1&mute=1&controls=0&loop=1&playlist=${match[1]}&modestbranding=1&showinfo=0&rel=0&iv_load_policy=3`
       : null;
   };
 
   const mediaContent =
-    mediaType === 'img'
+    mediaType === "img"
       ? mediaContentImg
-      : mediaType === 'video'
+      : mediaType === "video"
       ? mediaContentVideo
       : mediaContentTexte;
 
   return (
-    <div className="main-screen" style={{ position: 'relative', overflow: 'hidden' }}>
-      {mediaType === 'img' && mediaContent && (
+    <div
+      className="main-screen"
+      style={{ position: "relative", overflow: "hidden" }}
+    >
+      {mediaType === "img" && mediaContent && (
         <img
           src={mediaContent}
           alt="Background"
           style={{
-            position: 'absolute',
+            position: "absolute",
             top: 0,
             left: 0,
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
             zIndex: -1,
           }}
         />
       )}
-      {mediaType === 'video' && mediaContent && (
+      {mediaType === "video" &&
+        mediaContent &&
         (() => {
           const embedUrl = getYoutubeEmbedUrl(mediaContent);
           if (embedUrl) {
@@ -81,14 +89,15 @@ const MainScreen = () => {
                 title="Background Video"
                 allow="autoplay; muted; loop"
                 style={{
-                  position: 'absolute',
+                  border: "none",
+                  position: "absolute",
                   top: 0,
                   left: 0,
-                  width: '100%',
-                  height: '100%',
+                  width: "100%",
+                  height: "100%",
                   zIndex: -1,
                 }}
-              ></iframe>
+              />
             );
           } else {
             return (
@@ -98,30 +107,31 @@ const MainScreen = () => {
                 loop
                 muted
                 style={{
-                  position: 'absolute',
+                  position: "absolute",
                   top: 0,
                   left: 0,
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
                   zIndex: -1,
                 }}
               ></video>
             );
           }
-        })()
-      )}
+        })()}
       <img
         src={logo}
         alt="Logo"
         className="logo"
-        style={{ position: 'relative', zIndex: 1 }}
+        style={{ position: "relative", zIndex: 1 }}
       />
-      <div className="timer" style={{ position: 'relative', zIndex: 1 }}>
-        {mediaType === 'texte' && mediaContent ? (
+      <div className="timer" style={{ position: "relative", zIndex: 1 }}>
+        {mediaType === "texte" && mediaContent ? (
           <p className="textemediamain">{mediaContent}</p>
+        ) : mode === "chrono" ? (
+          <ChronometerDisplay />
         ) : (
-          mode === "chrono" ? <ChronometerDisplay /> : <TimerDisplay />
+          <TimerDisplay />
         )}
       </div>
     </div>

@@ -54,7 +54,7 @@ const SecondaryScreen = () => {
       /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/;
     const match = url.match(regex);
     return match
-      ? `https://www.youtube.com/embed/${match[1]}?autoplay=1&mute=1&controls=0&loop=1&playlist=${match[1]}`
+      ? `https://www.youtube.com/embed/${match[1]}?autoplay=1&mute=1&controls=0&loop=1&playlist=${match[1]}&modestbranding=1&showinfo=0&rel=0&iv_load_policy=3`
       : null;
   };
 
@@ -90,6 +90,7 @@ const SecondaryScreen = () => {
                 title="Background Video"
                 allow="autoplay; muted; loop"
                 style={{
+                  border: "none",
                   position: "absolute",
                   top: 0,
                   left: 0,
@@ -97,7 +98,7 @@ const SecondaryScreen = () => {
                   height: "100%",
                   zIndex: -1,
                 }}
-              ></iframe>
+              />
             );
           } else {
             return (
