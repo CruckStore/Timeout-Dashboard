@@ -107,7 +107,7 @@ If you have any suggestions or improvements for deploying or serving the dashboa
 
 ## :clock3: Development Timeline
 
-This project was built in under **10 hours**!
+This project was built in under **15 hours** in 1 week!
 
 ---
 
