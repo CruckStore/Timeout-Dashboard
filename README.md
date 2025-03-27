@@ -3,7 +3,36 @@
 🚀 **Discover Timeout-Dashboard!**
 
 I’m excited to share **Timeout-Dashboard**, a sleek dashboard designed for managing timeout events – built with passion by **CruckStore** (Discord: `gtol`).  
-*Preview: Soon*
+
+---
+
+## 🔍 Previews
+
+> **Note:** All preview images have been uploaded using my own [Simple-File-Uploader](https://github.com/CruckStore/Simple-File-Uploader), a free and open-source file upload system.
+
+- **Connection Screen:**  
+  ![Connection](http://83.150.218.36:3030/uploads/1743035598026-Capture%20d'%C3%83%C2%A9cran%202025-03-27%20003510.png)
+
+- **Home Screen:**  
+  ![Home](http://83.150.218.36:3030/uploads/1743035598024-Capture%20d'%C3%83%C2%A9cran%202025-03-27%20003524.png)
+
+- **Émetteur Settings:**  
+  ![Émetteur Settings](http://83.150.218.36:3030/uploads/1743035598020-Capture%20d'%C3%83%C2%A9cran%202025-03-27%20003531.png)
+
+- **Écran Récepteur:**  
+  ![Écran Récepteur](http://83.150.218.36:3030/uploads/1743035598017-Capture%20d'%C3%83%C2%A9cran%202025-03-27%20003538.png)
+
+- **Écran Chrono:**  
+  ![Écran Chrono](http://83.150.218.36:3030/uploads/1743035598035-Capture%20d'%C3%83%C2%A9cran%202025-03-27%20003556.png)
+
+- **Écran Secondaire:**  
+  ![Écran Secondaire](http://83.150.218.36:3030/uploads/1743035598064-Capture%20d'%C3%83%C2%A9cran%202025-03-27%20003550.png)
+
+- **Écran Principal:**  
+  ![Écran Principal](http://83.150.218.36:3030/uploads/1743035598069-Capture%20d'%C3%83%C2%A9cran%202025-03-27%20003544.png)
+
+- **Figma Design:**  
+  ![Figma](http://83.150.218.36:3030/uploads/1743035827284-qdzqdzqdz.png)
 
 ---
 
