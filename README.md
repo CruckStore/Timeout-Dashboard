@@ -16,19 +16,19 @@ I’m excited to share **Timeout-Dashboard**, a sleek dashboard designed for man
 - **Home Screen:**  
   ![Home](http://83.150.218.36:3030/uploads/1743035598024-Capture%20d'%C3%83%C2%A9cran%202025-03-27%20003524.png)
 
-- **Émetteur Settings:**  
+- **Settings emmiter:**  
   ![Émetteur Settings](http://83.150.218.36:3030/uploads/1743035598020-Capture%20d'%C3%83%C2%A9cran%202025-03-27%20003531.png)
 
-- **Écran Récepteur:**  
+- **Receiver display:**  
   ![Écran Récepteur](http://83.150.218.36:3030/uploads/1743035598017-Capture%20d'%C3%83%C2%A9cran%202025-03-27%20003538.png)
 
-- **Écran Chrono:**  
+- **Chrono screen:**  
   ![Écran Chrono](http://83.150.218.36:3030/uploads/1743035598035-Capture%20d'%C3%83%C2%A9cran%202025-03-27%20003556.png)
 
-- **Écran Secondaire:**  
+- **Secondary screen:**  
   ![Écran Secondaire](http://83.150.218.36:3030/uploads/1743035598064-Capture%20d'%C3%83%C2%A9cran%202025-03-27%20003550.png)
 
-- **Écran Principal:**  
+- **Main screen:**  
   ![Écran Principal](http://83.150.218.36:3030/uploads/1743035598069-Capture%20d'%C3%83%C2%A9cran%202025-03-27%20003544.png)
 
 - **Figma Design:**  
