@@ -52,7 +52,7 @@ export const TimerProvider = ({ children }: { children: React.ReactNode }) => {
   }, [mode]);
 
   useEffect(() => {
-    const socket = io("http://82.153.202.154:5000");
+    const socket = io("http://localhost:5000");
     socketRef.current = socket;
     socket.on("timerUpdate", (data: { time: number; isRunning: boolean }) => {
       if (modeRef.current === "chrono") {

@@ -15,8 +15,8 @@ body {
 }
 
 button {
-  padding: 10px 20px;
-  margin: 5px;
+  padding: 0.93vh 1.85vh;
+  margin: 0.46vh;
   background-color: #333;
   border: none;
   color: #fff;
@@ -24,34 +24,34 @@ button {
 }
 
 input {
-  padding: 10px;
-  margin: 5px;
+  padding: 0.93vh;
+  margin: 0.46vh;
 }
 
 .card {
-  border: 1px solid #444;
-  padding: 20px;
-  margin: 10px;
-  border-radius: 8px;
+  border: 0.09vh solid #444;
+  padding: 1.85vh;
+  margin: 0.93vh;
+  border-radius: 0.74vh;
   background-color: #1a1a1a;
 }
 
 .timer {
   text-align: center;
   font-family: "DS-Digital", sans-serif;
-  font-size: 250px;
+  font-size: 23.15vh;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
 }
 .timer h1 {
-  font-size: 250px;
+  font-size: 23.15vh;
 }
 
 .texte {
   text-align: center;
   font-family: "DS-Digital", sans-serif;
-  font-size: 250px;
+  font-size: 23.15vh;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
@@ -73,41 +73,41 @@ input {
 }
 
 .main-screen .logo {
-  width: 950px;
+  width: 87.96vh;
   aspect-ratio: 1068.66/200;
   flex-shrink: 0;
 }
 
 .secondary-screen .logo-container .logo {
-  width: 400px;
+  width: 37.04vh;
   aspect-ratio: 1068.66/200;
   flex-shrink: 0;
 }
 
 .secondary-screen .timer {
-  font-size: 100px;
+  font-size: 9.26vh;
 }
 
 .textemediasecondary {
-  font-size: 100px !important;
+  font-size: 9.26vh !important;
   position: absolute;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
-  padding: 0px;
+  padding: 0;
   color: white;
   white-space: nowrap;
 }
 
 .textemediamain {
-  font-size: 250px !important;
+  font-size: 23.15vh !important;
   color: white;
   margin: 0;
 }
 
 .countdown-screen {
-  font-size: 300px;
+  font-size: 27.78vh;
 }
 
 .settings-cards {
@@ -130,25 +130,25 @@ input {
 }
 
 .login-container h1 {
-  font-size: 65px;
-  margin-bottom: 50px;
+  font-size: 6.02vh;
+  margin-bottom: 4.63vh;
 }
 
 .button-group {
   display: flex;
   flex-direction: grid;
   align-items: center;
-  gap: 50px;
+  gap: 4.63vh;
 }
 
 .dashboard-container h1 {
-  font-size: 65px;
-  margin-bottom: 50px;
+  font-size: 6.02vh;
+  margin-bottom: 4.63vh;
 }
 
 h1 {
-  font-size: 65px;
-  margin-bottom: 50px;
+  font-size: 6.02vh;
+  margin-bottom: 4.63vh;
 }
 
 .global-settings {
@@ -158,13 +158,14 @@ h1 {
 }
 
 .button-group button {
-  width: 300px;
-  height: 105px;
+  width: 27.78vh;
+  height: 9.72vh;
   cursor: pointer;
+  font-size: 1.8519vh;
 }
 
 .logo {
-  margin: 20px;
+  margin: 1.85vh;
 }
 
 .global-settings {

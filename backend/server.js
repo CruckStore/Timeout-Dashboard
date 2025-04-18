@@ -257,15 +257,15 @@ app.get("/", (req, res) => {
           <div class="frontend-links">
             <div class="link-card">
               <h2>Main Screen</h2>
-              <a class="endpoint up" href="http://82.153.202.154:3000/main" target="_blank">Accéder au Main Screen</a>
+              <a class="endpoint up" href="http://localhost:5174/main" target="_blank">Accéder au Main Screen</a>
             </div>
             <div class="link-card">
               <h2>Secondary Screen</h2>
-              <a class="endpoint up" href="http://82.153.202.154:3000/secondary" target="_blank">Accéder au Secondary Screen</a>
+              <a class="endpoint up" href="http://localhost:5174/secondary" target="_blank">Accéder au Secondary Screen</a>
             </div>
             <div class="link-card">
               <h2>Countdown</h2>
-              <a class="endpoint up" href="http://82.153.202.154:3000/countdown" target="_blank">Accéder au Countdown</a>
+              <a class="endpoint up" href="http://localhost:5174/countdown" target="_blank">Accéder au Countdown</a>
             </div>
           </div>
           <h2 style="margin-top:40px;">Requêtes HTTP en temps réel</h2>

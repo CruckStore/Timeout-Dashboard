@@ -31,7 +31,7 @@ const SecondaryScreen = () => {
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
-    socketRef.current = io("http://82.153.202.154:5000");
+    socketRef.current = io("http://localhost:5000");
 
     socketRef.current.on("secondaryScreenUpdate", (data) => {
       setMediaType(data.mediaType);
